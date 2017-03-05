@@ -1,0 +1,344 @@
+<?php
+
+require_once dirname(__FILE__) . '/DbQueries.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/BeforeValidException.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/ExpiredException.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/SignatureInvalidException.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/JWT.php';
+use Firebase\JWT\JWT;
+
+class DbOperation
+{
+    private $con;
+
+    function __construct()
+    {
+        require_once dirname(__FILE__) . '/DbConnect.php';
+        $db = new DbConnect();
+        $this->con = $db->connect();
+    }
+
+    //Method to get all the time
+    public function getAllTime() {
+        $sql = query_Select_AllTime;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $allTime = $stmt->get_result();
+        $stmt->close();
+
+        return $allTime;        
+    }
+
+    //Method to get eco time
+    public function getEcoTime() {
+        $sql = query_Select_EcoTime;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $ecoTime = $stmt->get_result();
+        $stmt->close();
+
+        return $ecoTime;
+    }
+
+    //Method to get all countries
+    public function getCountries() {
+        $sql = query_Select_Countries;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $countries = $stmt->get_result();
+        $stmt->close();
+
+        return $countries;
+    }
+
+    //Method to get all cities 
+    public function getCities($countryId) {
+        $sql = query_Select_Cities;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $countryId);
+        $stmt->execute();
+        $cities = $stmt->get_result();
+        $stmt->close();
+
+        return $cities;
+    }
+
+    //Method to get all district 
+    public function getDistricts($cityId) {
+        $sql = query_Select_Districts;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $cityId);
+        $stmt->execute();
+        $countries = $stmt->get_result();
+        $stmt->close();
+
+        return $countries;
+    }
+
+    //Method to get all days in week 
+    public function getWeekDays() {
+        $sql = query_Select_DaysOfWeek;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $weekdays = $stmt->get_result();
+        $stmt->close();
+
+        return $weekdays;
+    }
+
+    //Method to get locations
+    public function getLocations($districtId) {
+        $sql = query_Select_Locations;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $districtId);
+        $stmt->execute();
+        $locations = $stmt->get_result();
+        $stmt->close();
+
+        return $locations;
+    }
+
+    //Method to get machines
+    public function getMachines($locationId) {
+        $sql = query_Select_Machines;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $locationId);
+        $stmt->execute();
+        $machines = $stmt->get_result();
+        $stmt->close();
+
+        return $machines;
+    }
+
+    //Method to get types
+    public function getTypes() {
+        $sql = query_Select_Types;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $types = $stmt->get_result();
+        $stmt->close();
+
+        return $types;
+    }    
+
+    //Method to get vouchers
+    public function getVouchers() {
+        $sql = query_Select_Vouchers;
+        $stmt = $this->con->prepare($sql);
+        $stmt->execute();
+        $vouchers = $stmt->get_result();
+        $stmt->close();
+
+        return $vouchers;
+    } 
+
+    //Method to get machines
+    public function getSelectedTime($dayId, $locationId, $machineId) {
+        $sql = query_Select_SelectedTime;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssssss', $dayId, $locationId, $machineId, $dayId, $locationId, $machineId);
+        $stmt->execute();
+        $selectedTime = $stmt->get_result();
+        $stmt->close();
+
+        return $selectedTime;
+    }
+
+    //Method to get customer 
+    public function getCustomer($customerId) {
+        $sql = query_Select_CustomerInfo;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $customerId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultArray = $result->fetch_assoc();
+        $stmt->close();
+        
+        $jwt = $this->createJwt($result);
+        $resultArray['JWT'] = $jwt;
+        
+        $token = $this->tokenGenerator($customerId);
+        $this->updateSessionToken($customerId, $token);
+
+        return $resultArray;
+    }
+
+    //Method to let customer login 
+    public function customerLogin($username, $password) {
+        $decodedPassword = $this->saltDecode($username, $password);
+
+        $sql = query_Select_CustomerId;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $username, $decodedPassword);
+        $stmt->execute();
+        $customerId = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $customerId['CUSTOMER_ID'];
+    }
+
+    //Method to let customer register
+    public function customerRegister($username, $password) {
+        if ($this->isCustomerExist($username)) {
+            return 2;
+        }
+        $registerResult = $this->insertNewCustomer($username, $password);
+        $this->storeSessionToken($username, $password);
+        return $registerResult;
+    }
+
+    //Method to check userame existence
+    private function isCustomerExist($username) {
+        $sql = query_Select_CustomerId_FromUsername;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+        return $num_rows > 0;
+    }
+
+    //Method to insert new customer
+    private function insertNewCustomer($username, $password) {
+        $saltAndPassword = $this->saltEncode($username, $password);
+        $salt = $saltAndPassword['salt'];
+        $encodedPassword = $saltAndPassword['password'];
+
+        $sql = query_Insert_NewCustomer;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sss', $username, $encodedPassword, $salt);
+        $result = $stmt->execute();
+        $stmt->close();
+        
+        if ($result) {
+            //Register success: 0 -> No error
+            return 0;
+        } else {
+            //Register failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+    //Method to encode salt and password for registration
+    private function saltEncode($password) {
+        //Create random salt
+        $salt = bin2hex(random_bytes(32));
+
+        //Prepend salt to password
+        $password = $salt . $password;
+
+        //Hash password
+        $password = hash('sha256', $password);
+
+        return array(
+            'salt' => $salt, 
+            'password' => $password
+        );
+    }
+
+    //Method to decode salt and password for login
+    private function saltDecode($username, $password) {
+        $salt = $this->selectSaltFromUsername($username);
+
+        //Prepend salt to password
+        $password = $salt . $password;
+
+        //Hash password
+        $password = hash('sha256', $password);
+
+        return $password;
+    }
+
+    //Method to select salt from username
+    private function selectSaltFromUsername($username) {
+        $sql = query_Select_Salt;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $salt = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $salt['SALT'];
+    }
+
+    //Method to store sessionToken to database
+    private function storeSessionToken($username, $password) {
+        $customerId = $this->customerLogin($username, $password);
+        $token = $this->tokenGenerator($customerId);
+
+        $sql = query_Store_SessionToken;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $customerId, $token);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    //Method to update sessionToken
+    private function updateSessionToken($customerId, $token) {
+        $currentDateTime = $this->getCurrentDateTime();
+
+        $sql = query_Update_SessionToken;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sss', $token, $currentDateTime, $customerId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    //Method to get user jwt
+    private function createJwt($result) {
+        if (mysqli_num_rows($result) <= 0) {
+            return;
+        }
+
+        $row = mysqli_fetch_assoc($result);
+        $tokenId    = base64_encode(mcrypt_create_iv(32));
+        $issuedAt   = time();
+        $notBefore  = $issuedAt + 10;             //Adding 10 seconds
+        $expire     = $notBefore + 60;            // Adding 60 seconds
+        $serverName = 'drmuller'; // Retrieve the server name from config file
+
+        /*
+        * Create the token as an array
+        */
+        $data = [
+            'iat'  => $issuedAt,         // Issued at: time when the token was generated
+            'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+            'iss'  => $serverName,       // Issuer
+            'nbf'  => $notBefore,        // Not before
+            'exp'  => $expire,           // Expire
+            'data' => [                  // Data related to the signer user
+                'userId'   => $row['CUSTOMER_ID'], // userid from the users table
+                'userName' => $row['CUSTOMER_NAME'], // User name
+                'userDob'  => $row['DOB'],
+                'userGender' => $row['GENDER'],
+                'userPhone'=> $row['PHONE'],
+                'userAddress' => $row['ADDRESS'],
+                'userEmail' => $row['EMAIL'],
+                'step' => $row['UISAVEDSTEP'],
+                'active' => $row['ACTIVE']
+            ]
+        ];
+        $secretKey = 'drmuller';
+        
+        $jwt = JWT::encode(
+        $data,      //Data to be encoded in the JWT
+        $secretKey, // The signing key
+        'HS512'     // Algorithm used to sign the token, see https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3
+        );
+        
+        return $jwt;
+    }
+
+    //Method to generate a unique api key every time
+    private function tokenGenerator($customerId) {
+        return (String) md5(uniqid($customerId, true));
+    }
+
+    //Method to get current date time in string format
+    private function getCurrentDateTime() {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $now = new DateTime('now');
+        return date_format($now, 'Y-m-d H:i:s');
+    }
+}
