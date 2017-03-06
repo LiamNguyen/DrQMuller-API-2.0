@@ -137,6 +137,14 @@
     );
 
     define(
+        'query_Select_CustomerId_FromTokenAndCustomerId',
+        'SELECT ut.CUSTOMER_ID
+        FROM ' . DB_NAME . '.tbl_usertoken ut 
+        WHERE ut.SESSIONTOKEN = ? 
+        AND ut.CUSTOMER_ID = ?'
+    );
+
+    define(
         'query_Select_UiFillStep',
         'SELECT cu.UISAVEDSTEP 
         FROM ' . DB_NAME . '.tbl_customers cu

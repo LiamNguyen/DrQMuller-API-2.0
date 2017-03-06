@@ -146,7 +146,7 @@ class DbOperation
 
     //Method to get customer 
     public function getCustomer($customerId) {
-        $token = $this->tokenGenerator($customerId);
+        $token = $this->getGUID();
         $this->updateSessionToken($customerId, $token);
 
         $sql = query_Select_CustomerInfo;
@@ -209,12 +209,12 @@ class DbOperation
         $customerId = $informationArray['customerId'];
         $customerName = $informationArray['customerName'];
         $address = $informationArray['address'];
-        $updatedAt = $informationArray['updatedAt'];
+        $updatedAt = $this->getCurrentDateTime();
         
 //**
 //Decide to rewriting UiSavedStep flag in database or not, if it is first time for basic information to be saved
         $sql;
-        if ($this->getUiFillStep() == 'none') {
+        if ($this->getUiFillStep($customerId) == 'none') {
         //** Rewriting flag
             $sql = query_Update_BasicInformation_FirstTime;
         } else {
@@ -240,6 +240,19 @@ class DbOperation
         $sql = query_Select_CustomerId_FromToken;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
+    //Method to check sessionToken and customer ID is valid
+    public function isValidTokenAndCustomerId($token, $customerId) {
+        $sql = query_Select_CustomerId_FromTokenAndCustomerId;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $token, $customerId);
         $stmt->execute();
         $stmt->store_result();
         $num_rows = $stmt->num_rows;
@@ -327,7 +340,7 @@ class DbOperation
     //Method to store sessionToken to database
     private function storeSessionToken($username, $password) {
         $customerId = $this->customerLogin($username, $password);
-        $token = $this->tokenGenerator($customerId);
+        $token = $this->getGUID();
 
         $sql = query_Store_SessionToken;
         $stmt = $this->con->prepare($sql);
@@ -394,19 +407,15 @@ class DbOperation
     }
 
     //Method to select UiFillStep
-    private function getUiFillStep() {
+    private function getUiFillStep($customerId) {
         $sql = query_Select_UiFillStep;
         $stmt = $this->con->prepare($sql);
-        $stmt-execute();
-        $uiFillStep = $stmt->get_result->fetch_assoc();
+        $stmt->bind_param('s', $customerId);
+        $stmt->execute();
+        $uiFillStep = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
         return $uiFillStep['UISAVEDSTEP'];
-    }
-
-    //Method to generate a unique api key every time
-    private function tokenGenerator($customerId) {
-        return (String) md5(uniqid($customerId, true));
     }
 
     //Method to get current date time in string format
@@ -414,5 +423,21 @@ class DbOperation
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $now = new DateTime('now');
         return date_format($now, 'Y-m-d H:i:s');
+    }
+
+    //Method to generate GUID
+    private function getGUID(){
+        if (function_exists('com_create_guid')){
+            return com_create_guid();
+        } else {
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45);
+            $uuid = substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12);
+            return $uuid;
+        }
     }
 }

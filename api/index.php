@@ -283,15 +283,7 @@ $app->post('/user/signin', function ($request, $response) {
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
         $customerInfo = $db->getCustomer($customerId);
-        $result['customerId'] = $customerInfo['CUSTOMER_ID'];
-        $result['customerName'] = $customerInfo['CUSTOMER_NAME'];
-        $result['dob'] = $customerInfo['DOB'];
-        $result['gender'] = $customerInfo['GENDER'];
-        $result['phone'] = $customerInfo['PHONE'];
-        $result['address'] = $customerInfo['ADDRESS'];
-        $result['email'] = $customerInfo['EMAIL'];
-        $result['sessonToken'] = $customerInfo['SESSIONTOKEN']; 
-        $result['jwt'] = $customerInfo['JWT'];
+        $result = parseCustomerInformationToResponse($result, $customerInfo);
         $statusCode = 200;
 
     } else {
@@ -356,7 +348,7 @@ $app->post('/user/register', function ($request, $response) {
  * Authorization: none
  * Method: GET
  * */
-$app->get('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
+$app->post('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
     $validityResult = isValidCustomer($request, $response, 'Update_ConfirmAppointment');
     if (!$validityResult['valid']) {
         $authenticateResponse = array();
@@ -369,9 +361,9 @@ $app->get('/appointment/confirm/{appointmentId}', function ($request, $response,
     $result = array();
     $statusCode;
 
-    $confirmResult = $db->confirmAppointment($args['appointmentId']);
+    $confirmResultError = $db->confirmAppointment($args['appointmentId']);
 
-    if ($confirmResult == 0) {
+    if ($confirmResultError == 0) {
         $result['status'] = '1';
         $result['message'] = appointment_confirm_success_message;
         $statusCode = 200;
@@ -395,40 +387,31 @@ $app->get('/appointment/confirm/{appointmentId}', function ($request, $response,
  * Authorization: none
  * Method: POST
  * */
-$app->post('/user/basicinfo', function ($request, $response) {
+$app->post('/user/basicinformation', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
 
     $customerId = $data->userId;
     $customerName = $data->userName;
     $address = $data->userAddress;
-    $updatedAt = $data->updatedAt;
 
     $informationArray = array(
-        'customerId' => $customerId,
-        'customerName' => $customerName,
-        'address' => $address,
-        'updatedAt' => $updatedAt
+        'customerId' => $data->userId,
+        'customerName' => $data->userName,
+        'address' => $data->userAddress
     );
 
     $db = new DbOperation();
 
-    $customerLogin['Update_BasicInfo'] = array();
+    $updateBasicInfo['Update_BasicInfo'] = array();
     $result = array();
     $statusCode;
 
-    $updateBasicInformationResult = $db->updateBasicInformation($informationArray);
-    if ($updateBasicInformationResult == 0) {
-        $customerInfo = $db->getCustomer($customerId);
-        $result['customerId'] = $customerInfo['CUSTOMER_ID'];
-        $result['customerName'] = $customerInfo['CUSTOMER_NAME'];
-        $result['dob'] = $customerInfo['DOB'];
-        $result['gender'] = $customerInfo['GENDER'];
-        $result['phone'] = $customerInfo['PHONE'];
-        $result['address'] = $customerInfo['ADDRESS'];
-        $result['email'] = $customerInfo['EMAIL'];
-        $result['sessonToken'] = $customerInfo['SESSIONTOKEN']; 
-        $result['jwt'] = $customerInfo['JWT'];
+    $updateBasicInformationResultError = $db->updateBasicInformation($informationArray);
+    
+    if ($updateBasicInformationResultError == 0) {
+        $customerInfo = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInfo);
         $statusCode = 200;
 
     } else {
@@ -439,26 +422,34 @@ $app->post('/user/basicinfo', function ($request, $response) {
 
     }
 
-    array_push($customerLogin['Select_ToAuthenticate'], $result);
+    array_push($updateBasicInfo['Update_BasicInfo'], $result);
 
-    return responseBuilder($statusCode, $response, $customerLogin);
+    return responseBuilder($statusCode, $response, $updateBasicInfo);
 });
 
 /* *
  * Type: Helper method
- * Responsibility: Check session token for valid customer
+ * Responsibility: Check session token along with customer ID for valid customer
  * */
 
 function isValidCustomer($request, $response, $requestName) {
     $token = $request->getHeaderLine('Authorization');
     $authenticateResponse[$requestName] = array();
     $result = array();
+    $db = new DbOperation();
     $isValid = true;
+    $methodToCheck;
+
+    $data = (object) $request->getParsedBody();
+
+    if (empty($data->userId)) {
+        $isValidTokenResult = $db->isValidToken($token);
+    } else {
+        $isValidTokenResult = $db->isValidTokenAndCustomerId($token, $data->userId);
+    }
 
     if (!empty($token)) {
-        $db = new DbOperation();
-
-        if (!$db->isValidToken($token)) {
+        if (!$isValidTokenResult) {
             $result['error'] = invalid_token_message;
             $result['errorCode'] = invalid_token_code;
 
@@ -476,6 +467,25 @@ function isValidCustomer($request, $response, $requestName) {
 
     return array('valid' => $isValid, 'response' => $authenticateResponse);
 }
+
+/* *
+ * Type: Helper method
+ * Responsibility: Parsing data from customerInformation array to response array
+ * */
+
+ function parseCustomerInformationToResponse($resultResponse, $customerInformation) {
+        $resultResponse['customerId'] = $customerInformation['CUSTOMER_ID'];
+        $resultResponse['customerName'] = $customerInformation['CUSTOMER_NAME'];
+        $resultResponse['dob'] = $customerInformation['DOB'];
+        $resultResponse['gender'] = $customerInformation['GENDER'];
+        $resultResponse['phone'] = $customerInformation['PHONE'];
+        $resultResponse['address'] = $customerInformation['ADDRESS'];
+        $resultResponse['email'] = $customerInformation['EMAIL'];
+        $resultResponse['sessonToken'] = $customerInformation['SESSIONTOKEN']; 
+        $resultResponse['jwt'] = $customerInformation['JWT'];
+
+        return $resultResponse;
+ }
 
 /* *
  * Type: Helper method
