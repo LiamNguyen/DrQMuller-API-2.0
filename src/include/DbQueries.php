@@ -136,6 +136,13 @@
         WHERE ut.SESSIONTOKEN = ?'
     );
 
+    define(
+        'query_Select_UiFillStep',
+        'SELECT cu.UISAVEDSTEP 
+        FROM ' . DB_NAME . '.tbl_customers cu
+        WHERE cu.CUSTOMER_ID = ?'
+    );
+
 /* *
  * INSERT STATEMENTS
  * */
@@ -171,6 +178,20 @@
         'UPDATE ' . DB_NAME . '.tbl_appointments ap
         SET ap.ISCONFIRMED = 1
         WHERE ap.APPOINTMENT_ID = ?'
+    );
+
+    define(
+        'query_Update_BasicInformation_FirstTime',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.UISAVEDSTEP = \'basic\', CUSTOMER_NAME = ?, ADDRESS = ?, UPDATEDAT = ? 
+        WHERE CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_BasicInformation',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET CUSTOMER_NAME = ?, ADDRESS = ?, UPDATEDAT = ? 
+        WHERE CUSTOMER_ID = ?'
     );
 
 ?>  

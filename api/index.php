@@ -390,6 +390,61 @@ $app->get('/appointment/confirm/{appointmentId}', function ($request, $response,
 });
 
 /* *
+ * URL: http://210.211.109.180/drmuller/api/user/basicinfo
+ * Parameters: none
+ * Authorization: none
+ * Method: POST
+ * */
+$app->post('/user/basicinfo', function ($request, $response) {
+
+    $data = (object) $request->getParsedBody();
+
+    $customerId = $data->userId;
+    $customerName = $data->userName;
+    $address = $data->userAddress;
+    $updatedAt = $data->updatedAt;
+
+    $informationArray = array(
+        'customerId' => $customerId,
+        'customerName' => $customerName,
+        'address' => $address,
+        'updatedAt' => $updatedAt
+    );
+
+    $db = new DbOperation();
+
+    $customerLogin['Update_BasicInfo'] = array();
+    $result = array();
+    $statusCode;
+
+    $updateBasicInformationResult = $db->updateBasicInformation($informationArray);
+    if ($updateBasicInformationResult == 0) {
+        $customerInfo = $db->getCustomer($customerId);
+        $result['customerId'] = $customerInfo['CUSTOMER_ID'];
+        $result['customerName'] = $customerInfo['CUSTOMER_NAME'];
+        $result['dob'] = $customerInfo['DOB'];
+        $result['gender'] = $customerInfo['GENDER'];
+        $result['phone'] = $customerInfo['PHONE'];
+        $result['address'] = $customerInfo['ADDRESS'];
+        $result['email'] = $customerInfo['EMAIL'];
+        $result['sessonToken'] = $customerInfo['SESSIONTOKEN']; 
+        $result['jwt'] = $customerInfo['JWT'];
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($customerLogin['Select_ToAuthenticate'], $result);
+
+    return responseBuilder($statusCode, $response, $customerLogin);
+});
+
+/* *
  * Type: Helper method
  * Responsibility: Check session token for valid customer
  * */

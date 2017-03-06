@@ -204,6 +204,37 @@ class DbOperation
         }
     }
 
+    //Method to update basic information of user 
+    public function updateBasicInformation($informationArray) {
+        $customerId = $informationArray['customerId'];
+        $customerName = $informationArray['customerName'];
+        $address = $informationArray['address'];
+        $updatedAt = $informationArray['updatedAt'];
+        
+//**
+//Decide to rewriting UiSavedStep flag in database or not, if it is first time for basic information to be saved
+        $sql;
+        if ($this->getUiFillStep() == 'none') {
+        //** Rewriting flag
+            $sql = query_Update_BasicInformation_FirstTime;
+        } else {
+        //** Not rewriting flag
+            $sql = query_Update_BasicInformation;
+        }
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $customerName, $address, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
     //Method to check sessionToken is valid
     public function isValidToken($token) {
         $sql = query_Select_CustomerId_FromToken;
@@ -360,6 +391,17 @@ class DbOperation
         );
         
         return $jwt;
+    }
+
+    //Method to select UiFillStep
+    private function getUiFillStep() {
+        $sql = query_Select_UiFillStep;
+        $stmt = $this->con->prepare($sql);
+        $stmt-execute();
+        $uiFillStep = $stmt->get_result->fetch_assoc();
+        $stmt->close();
+
+        return $uiFillStep['UISAVEDSTEP'];
     }
 
     //Method to generate a unique api key every time
