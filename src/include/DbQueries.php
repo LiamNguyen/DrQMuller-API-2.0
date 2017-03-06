@@ -17,7 +17,7 @@
         'SELECT t.TIME_ID, t.TIME 
         FROM ' . DB_NAME . '.tbl_time t 
         WHERE (t.TIME_ID < 46 AND t.TIME_ID > 28) 
-        OR (t.TIME_ID < 24 AND t.TIME_ID > 6'
+        OR (t.TIME_ID < 24 AND t.TIME_ID > 6)'
     );
 
     define(
@@ -129,6 +129,13 @@
         WHERE cu.LOGIN_ID = ? AND STATUS = 1'
     );
 
+    define(
+        'query_Select_CustomerId_FromToken',
+        'SELECT ut.CUSTOMER_ID
+        FROM ' . DB_NAME . '.tbl_usertoken ut 
+        WHERE ut.SESSIONTOKEN = ?'
+    );
+
 /* *
  * INSERT STATEMENTS
  * */
@@ -157,6 +164,13 @@
         'UPDATE  ' . DB_NAME . '.tbl_usertoken ut
         SET ut.SESSIONTOKEN = ?, ut.UPDATEDAT = ? 
         WHERE ut.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_ConfirmAppointment',
+        'UPDATE ' . DB_NAME . '.tbl_appointments ap
+        SET ap.ISCONFIRMED = 1
+        WHERE ap.APPOINTMENT_ID = ?'
     );
 
 ?>  

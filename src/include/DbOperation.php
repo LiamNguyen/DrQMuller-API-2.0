@@ -146,6 +146,9 @@ class DbOperation
 
     //Method to get customer 
     public function getCustomer($customerId) {
+        $token = $this->tokenGenerator($customerId);
+        $this->updateSessionToken($customerId, $token);
+
         $sql = query_Select_CustomerInfo;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $customerId);
@@ -156,9 +159,6 @@ class DbOperation
         
         $jwt = $this->createJwt($result);
         $resultArray['JWT'] = $jwt;
-        
-        $token = $this->tokenGenerator($customerId);
-        $this->updateSessionToken($customerId, $token);
 
         return $resultArray;
     }
@@ -187,6 +187,36 @@ class DbOperation
         return $registerResult;
     }
 
+    //Method to confirm appointment
+    public function confirmAppointment($appointmentId) {
+        $sql = query_Update_ConfirmAppointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $appointmentId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+    //Method to check sessionToken is valid
+    public function isValidToken($token) {
+        $sql = query_Select_CustomerId_FromToken;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $token);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
     //Method to check userame existence
     private function isCustomerExist($username) {
         $sql = query_Select_CustomerId_FromUsername;
@@ -196,6 +226,7 @@ class DbOperation
         $stmt->store_result();
         $num_rows = $stmt->num_rows;
         $stmt->close();
+
         return $num_rows > 0;
     }
 
@@ -316,7 +347,8 @@ class DbOperation
                 'userAddress' => $row['ADDRESS'],
                 'userEmail' => $row['EMAIL'],
                 'step' => $row['UISAVEDSTEP'],
-                'active' => $row['ACTIVE']
+                'active' => $row['ACTIVE'],
+                'sessionToken' => $row['SESSIONTOKEN']
             ]
         ];
         $secretKey = 'drmuller';

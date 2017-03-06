@@ -30,4 +30,34 @@
         'register_success_message', 
         'You are successfully registered'
     );
+
+    define(
+        'invalid_token_message',
+        'Access Denied. Invalid session token'
+    );
+
+    define(
+        'invalid_token_code',
+        'invalid-token'
+    );
+
+    define(
+        'token_missing_message',
+        'Token is missing'
+    );
+
+    define(
+        'token_missing_code',
+        'token-missing'
+    );
+
+    define(
+        'appointment_confirm_success_message',
+        'Appointment confirmed successfully'
+    );
+
+    define(
+        'appointment_confirm_fail_message',
+        'Appointment failed to be confirmed'
+    )
 ?>

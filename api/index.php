@@ -278,6 +278,7 @@ $app->post('/user/signin', function ($request, $response) {
 
     $customerLogin['Select_ToAuthenticate'] = array();
     $result = array();
+    $statusCode;
 
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
@@ -291,18 +292,18 @@ $app->post('/user/signin', function ($request, $response) {
         $result['email'] = $customerInfo['EMAIL'];
         $result['sessonToken'] = $customerInfo['SESSIONTOKEN']; 
         $result['jwt'] = $customerInfo['JWT'];
+        $statusCode = 200;
 
-        array_push($customerLogin['Select_ToAuthenticate'], $result);
-
-        return responseBuilder(200, $response, $customerLogin);
     } else {
         $result['error'] = invalid_username_or_password_message;
         $result['errorCode'] = invalid_username_or_password_code;
+        $statusCode = 401;
 
-        array_push($customerLogin['Select_ToAuthenticate'], $result);
-
-        return responseBuilder(401, $response, $customerLogin);
     }
+
+    array_push($customerLogin['Select_ToAuthenticate'], $result);
+
+    return responseBuilder($statusCode, $response, $customerLogin);
 });
 
 /* *
@@ -322,34 +323,114 @@ $app->post('/user/register', function ($request, $response) {
 
     $customerRegister['Insert_NewCustomer'] = array();
     $result = array();
+    $statusCode;
 
     $registerResult = $db->customerRegister($username, $password);
 
     if ($registerResult == 0) {
         $result['status'] = '1';
         $result['message'] = register_success_message;
-            
-        array_push($customerRegister['Insert_NewCustomer'], $result);
+        $statusCode = 201;
 
-        return responseBuilder(201, $response, $customerRegister);
     } else if ($registerResult == 1) {
         $result['status'] = '0';
         $result['error'] = internal_error_message;
         $result['errorCode'] = internal_error_code;
-        
-        array_push($customerRegister['Insert_NewCustomer'], $result);
+        $statusCode = 501;
 
-        return responseBuilder(501, $response, $customerRegister);
     } else if ($registerResult == 2) {
         $result['status'] = '2';
         $result['error'] = customer_existed_error_message;
         $result['errorCode'] = customer_existed_error_code;
-            
-        array_push($customerRegister['Insert_NewCustomer'], $result);
-
-        return responseBuilder(409, $response, $customerRegister);
+        $statusCode = 409;
     }
 
+    array_push($customerRegister['Insert_NewCustomer'], $result);
+
+    return responseBuilder($statusCode, $response, $customerRegister);
 });
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/confirm/
+ * Parameters: none
+ * Authorization: none
+ * Method: GET
+ * */
+$app->get('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
+    $validityResult = isValidCustomer($request, $response, 'Update_ConfirmAppointment');
+    if (!$validityResult['valid']) {
+        $authenticateResponse = array();
+        return responseBuilder(401, $response, $validityResult['response']);
+
+    }
+
+    $db = new DbOperation();
+    $confirmAppointment['Update_ConfirmAppointment'] = array();
+    $result = array();
+    $statusCode;
+
+    $confirmResult = $db->confirmAppointment($args['appointmentId']);
+
+    if ($confirmResult == 0) {
+        $result['status'] = '1';
+        $result['message'] = appointment_confirm_success_message;
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
+
+    return responseBuilder($statusCode, $response, $confirmAppointment);
+});
+
+/* *
+ * Type: Helper method
+ * Responsibility: Check session token for valid customer
+ * */
+
+function isValidCustomer($request, $response, $requestName) {
+    $token = $request->getHeaderLine('Authorization');
+    $authenticateResponse[$requestName] = array();
+    $result = array();
+    $isValid = true;
+
+    if (!empty($token)) {
+        $db = new DbOperation();
+
+        if (!$db->isValidToken($token)) {
+            $result['error'] = invalid_token_message;
+            $result['errorCode'] = invalid_token_code;
+
+            $isValid = false;
+        } 
+
+    } else {
+        $result['error'] = token_missing_message;
+        $result['errorCode'] = token_missing_code;
+
+        $isValid = false;
+    }
+
+    array_push($authenticateResponse[$requestName], $result);
+
+    return array('valid' => $isValid, 'response' => $authenticateResponse);
+}
+
+/* *
+ * Type: Helper method
+ * Responsibility: Build response with contentType and httpStatusCode
+ * */
+
+function responseBuilder($status_code, $response, $responseObj) {
+    return $response->withStatus($status_code)
+                    ->withHeader('Content-Type', 'application/json')
+                    ->write(json_encode($responseObj));
+}
 
 $app->run();
