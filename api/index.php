@@ -353,7 +353,6 @@ $app->post('/appointment/confirm/{appointmentId}', function ($request, $response
     if (!$validityResult['valid']) {
         $authenticateResponse = array();
         return responseBuilder(401, $response, $validityResult['response']);
-
     }
 
     $db = new DbOperation();
@@ -382,18 +381,19 @@ $app->post('/appointment/confirm/{appointmentId}', function ($request, $response
 });
 
 /* *
- * URL: http://210.211.109.180/drmuller/api/user/basicinfo
+ * URL: http://210.211.109.180/drmuller/api/user/basicinformation
  * Parameters: none
  * Authorization: none
- * Method: POST
+ * Method: PUT
  * */
-$app->post('/user/basicinformation', function ($request, $response) {
+$app->put('/user/basicinformation', function ($request, $response) {
+    $validityResult = isValidCustomer($request, $response, 'Update_BasicInfo');
+    if (!$validityResult['valid']) {
+        $authenticateResponse = array();
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
 
     $data = (object) $request->getParsedBody();
-
-    $customerId = $data->userId;
-    $customerName = $data->userName;
-    $address = $data->userAddress;
 
     $informationArray = array(
         'customerId' => $data->userId,
@@ -428,6 +428,100 @@ $app->post('/user/basicinformation', function ($request, $response) {
 });
 
 /* *
+ * URL: http://210.211.109.180/drmuller/api/user/necessaryinformation
+ * Parameters: none
+ * Authorization: none
+ * Method: PUT
+ * */
+$app->put('/user/necessaryinformation', function ($request, $response) {
+    $validityResult = isValidCustomer($request, $response, 'Update_NecessaryInfo');
+    if (!$validityResult['valid']) {
+        $authenticateResponse = array();
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $informationArray = array(
+        'customerId' => $data->userId,
+        'dob' => $data->userDob,
+        'gender' => $data->userGender
+    );
+
+    $db = new DbOperation();
+
+    $updateNecessaryInfo['Update_NecessaryInfo'] = array();
+    $result = array();
+    $statusCode;
+
+    $updateNecessaryInformationResultError = $db->updateNecessaryInformation($informationArray);
+    
+    if ($updateBasicInformationResultError == 0) {
+        $customerInfo = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($updateNecessaryInfo['Update_NecessaryInfo'], $result);
+
+    return responseBuilder($statusCode, $response, $updateNecessaryInfo);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/user/importantinformation
+ * Parameters: none
+ * Authorization: none
+ * Method: PUT
+ * */
+$app->put('/user/importantinformation', function ($request, $response) {
+    $validityResult = isValidCustomer($request, $response, 'Update_ImportantInfo');
+    if (!$validityResult['valid']) {
+        $authenticateResponse = array();
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $informationArray = array(
+        'customerId' => $data->userId,
+        'email' => $data->userEmail,
+        'phone' => $data->userPhone
+    );
+
+    $db = new DbOperation();
+
+    $updateImportantInfo['Update_ImportantInfo'] = array();
+    $result = array();
+    $statusCode;
+
+    $updateImportantInformationResultError = $db->updateImportantInformation($informationArray);
+    
+    if ($updateImportantInformationResultError == 0) {
+        $customerInfo = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($updateImportantInfo['Update_ImportantInfo'], $result);
+
+    return responseBuilder($statusCode, $response, $updateImportantInfo);
+});
+
+/* *
  * Type: Helper method
  * Responsibility: Check session token along with customer ID for valid customer
  * */
@@ -437,8 +531,7 @@ function isValidCustomer($request, $response, $requestName) {
     $authenticateResponse[$requestName] = array();
     $result = array();
     $db = new DbOperation();
-    $isValid = true;
-    $methodToCheck;
+    $isValidTokenResult;
 
     $data = (object) $request->getParsedBody();
 
@@ -450,22 +543,20 @@ function isValidCustomer($request, $response, $requestName) {
 
     if (!empty($token)) {
         if (!$isValidTokenResult) {
+            $result['status'] = '0';
             $result['error'] = invalid_token_message;
             $result['errorCode'] = invalid_token_code;
-
-            $isValid = false;
         } 
 
     } else {
+        $result['status'] = '0';
         $result['error'] = token_missing_message;
         $result['errorCode'] = token_missing_code;
-
-        $isValid = false;
     }
 
     array_push($authenticateResponse[$requestName], $result);
 
-    return array('valid' => $isValid, 'response' => $authenticateResponse);
+    return array('valid' => $isValidTokenResult, 'response' => $authenticateResponse);
 }
 
 /* *

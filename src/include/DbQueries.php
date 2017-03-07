@@ -191,15 +191,36 @@
     define(
         'query_Update_BasicInformation_FirstTime',
         'UPDATE ' . DB_NAME . '.tbl_customers cu
-        SET cu.UISAVEDSTEP = \'basic\', CUSTOMER_NAME = ?, ADDRESS = ?, UPDATEDAT = ? 
-        WHERE CUSTOMER_ID = ?'
+        SET cu.UISAVEDSTEP = \'basic\', cu.CUSTOMER_NAME = ?, cu.ADDRESS = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
     );
 
     define(
         'query_Update_BasicInformation',
         'UPDATE ' . DB_NAME . '.tbl_customers cu
-        SET CUSTOMER_NAME = ?, ADDRESS = ?, UPDATEDAT = ? 
-        WHERE CUSTOMER_ID = ?'
+        SET cu.CUSTOMER_NAME = ?, cu.ADDRESS = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_NecessaryInformation_FirstTime',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.UISAVEDSTEP = \'necessary\', cu.DOB = ?, cu.GENDER = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_NecessaryInformation',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.DOB = ?, cu.GENDER = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_ImportantInformation',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.UISAVEDSTEP = \'important\', cu.EMAIL = ?, cu.PHONE = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
     );
 
 ?>  

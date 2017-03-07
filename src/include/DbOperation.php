@@ -235,6 +235,60 @@ class DbOperation
         }
     }
 
+    //Method to update basic information of user 
+    public function updateNecessaryInformation($informationArray) {
+        $customerId = $informationArray['customerId'];
+        $dob = $informationArray['dob'];
+        $gender = $informationArray['gender'];
+        $updatedAt = $this->getCurrentDateTime();
+        
+//**
+//Decide to rewriting UiSavedStep flag in database or not, if it is first time for basic information to be saved
+        $sql;
+        if ($this->getUiFillStep($customerId) == 'basic') {
+        //** Rewriting flag
+            $sql = query_Update_NecessaryInformation_FirstTime;
+        } else {
+        //** Not rewriting flag
+            $sql = query_Update_NecessaryInformation;
+        }
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $dob, $gender, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+//Method to update basic information of user 
+    public function updateImportantInformation($informationArray) {
+        $customerId = $informationArray['customerId'];
+        $email = $informationArray['email'];
+        $phone = $informationArray['phone'];
+        $updatedAt = $this->getCurrentDateTime();
+
+        $sql = query_Update_ImportantInformation;
+
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $email, $phone, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
     //Method to check sessionToken is valid
     public function isValidToken($token) {
         $sql = query_Select_CustomerId_FromToken;
