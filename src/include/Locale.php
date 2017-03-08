@@ -81,4 +81,9 @@
         'pattern-fail'
     );
 
+    define(
+        'appointments_validated_message',
+        'All appointments have been validated'
+    );
+
 ?>

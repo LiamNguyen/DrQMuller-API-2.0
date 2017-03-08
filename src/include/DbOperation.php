@@ -187,23 +187,6 @@ class DbOperation
         return $registerResult;
     }
 
-    //Method to confirm appointment
-    public function confirmAppointment($appointmentId) {
-        $sql = query_Update_ConfirmAppointment;
-        $stmt = $this->con->prepare($sql);
-        $stmt->bind_param('s', $appointmentId);
-        $result = $stmt->execute();
-        $stmt->close();
-
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
-    }
-
     //Method to update basic information of user 
     public function updateBasicInformation($informationArray) {
         $customerId = $informationArray['customerId'];
@@ -275,6 +258,39 @@ class DbOperation
 
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ssss', $email, $phone, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+    //Method to confirm appointment
+    public function confirmAppointment($appointmentId) {
+        $sql = query_Update_ConfirmAppointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $appointmentId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm success: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+    //Method to validate appointments
+    public function validateAppointments() {
+        $sql = query_Update_ValidateAppointments;
+        $stmt = $this->con->prepare($sql);
         $result = $stmt->execute();
         $stmt->close();
 

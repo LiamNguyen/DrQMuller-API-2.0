@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e97bb21-dd52-47f6-9fa5-d71e6bd13206" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/php.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/index.php" afterPath="$PROJECT_DIR$/api/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbOperation.php" afterPath="$PROJECT_DIR$/src/include/DbOperation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbQueries.php" afterPath="$PROJECT_DIR$/src/include/DbQueries.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/Locale.php" afterPath="$PROJECT_DIR$/src/include/Locale.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,24 +20,32 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DatabaseView">
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1395">
-              <caret line="47" column="28" lean-forward="true" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+            <state relative-caret-position="426">
+              <caret line="560" column="51" lean-forward="true" selection-start-line="560" selection-start-column="51" selection-end-line="560" selection-end-column="51" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ValidationRules.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ValidationRules.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/utils/ValidationRules.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="92" column="0" lean-forward="true" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+            <state relative-caret-position="510">
+              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -43,8 +54,8 @@
       <file leaf-file-name="DbOperation.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/DbOperation.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="121" column="9" lean-forward="true" selection-start-line="121" selection-start-column="9" selection-end-line="121" selection-end-column="9" />
+            <state relative-caret-position="366">
+              <caret line="290" column="32" lean-forward="false" selection-start-line="290" selection-start-column="32" selection-end-line="290" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -53,9 +64,34 @@
       <file leaf-file-name="DbQueries.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="411">
+              <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+              <folding>
+                <marker date="1488997456000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
+                <marker date="1488997456000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
+                <marker date="1488997456000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
+                <marker date="1488997456000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
+                <marker date="1488997456000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
+                <marker date="1488997456000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
+                <marker date="1488997456000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
+                <marker date="1488997456000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
+                <marker date="1488997456000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
+                <marker date="1488997456000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
+                <marker date="1488997456000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
+                <marker date="1488997456000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
+                <marker date="1488997456000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
+                <marker date="1488997456000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1488997456000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
+                <marker date="1488997456000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1488997456000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1488997456000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
+                <marker date="1488997456000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
+                <marker date="1488997456000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
+                <marker date="1488997456000" expanded="true" signature="4277:4377" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
+                <marker date="1488997456000" expanded="true" signature="4445:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+                <marker date="1488997456000" expanded="true" signature="4456:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+                <marker date="1488997456000" expanded="true" signature="6183:6318" ph="UPDATE tbl_a... " />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,8 +99,8 @@
       <file leaf-file-name="Locale.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/Locale.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="33" column="11" lean-forward="true" selection-start-line="33" selection-start-column="11" selection-end-line="33" selection-end-column="11" />
+            <state relative-caret-position="801">
+              <caret line="84" column="39" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -83,9 +119,11 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/api/index.php" />
-        <option value="$PROJECT_DIR$/src/include/DbOperation.php" />
         <option value="$PROJECT_DIR$/src/include/utils/ValidationRules.php" />
+        <option value="$PROJECT_DIR$/src/include/DbQueries.php" />
+        <option value="$PROJECT_DIR$/src/include/DbOperation.php" />
+        <option value="$PROJECT_DIR$/src/include/Locale.php" />
+        <option value="$PROJECT_DIR$/api/index.php" />
       </list>
     </option>
   </component>
@@ -99,6 +137,25 @@
   <component name="ProjectFrameBounds">
     <option name="width" value="804" />
     <option name="height" value="1050" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>SQL</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>SqlDialectInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -191,6 +248,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="FullScreen" value="true" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="com.intellij.database.dataSource.DataSourceTemplate" value="MySQL" />
   </component>
   <component name="RunManager" selected="JavaScript Debug.index.php">
     <configuration default="false" name="ValidationRules.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/drmuller/src/include/utils/ValidationRules.php">
@@ -273,12 +332,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1488991723811</updated>
-      <workItem from="1488991726409" duration="2748000" />
+      <workItem from="1488991726409" duration="5738000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2748000" />
+    <option name="totallyTimeSpent" value="5738000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="804" height="1050" extended-state="6" />
@@ -314,7 +373,15 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
+    <entry file="file://$PROJECT_DIR$/src/include/utils/ValidationRules.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/9c12d6a1-c1a1-482f-8500-1ea02f6af082/console.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -322,34 +389,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="203" column="0" lean-forward="true" selection-start-line="203" selection-start-column="0" selection-end-line="203" selection-end-column="0" />
+          <folding>
+            <marker date="1488997456000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1488997456000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1488997456000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
+            <marker date="1488997456000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
+            <marker date="1488997456000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
+            <marker date="1488997456000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
+            <marker date="1488997456000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
+            <marker date="1488997456000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
+            <marker date="1488997456000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
+            <marker date="1488997456000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
+            <marker date="1488997456000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
+            <marker date="1488997456000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
+            <marker date="1488997456000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
+            <marker date="1488997456000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1488997456000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
+            <marker date="1488997456000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1488997456000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1488997456000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1488997456000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1488997456000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
+            <marker date="1488997456000" expanded="true" signature="4277:4377" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
+            <marker date="1488997456000" expanded="true" signature="4445:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1488997456000" expanded="true" signature="4456:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1488997456000" expanded="true" signature="6183:6318" ph="UPDATE tbl_a... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/include/DbOperation.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="290" column="32" lean-forward="false" selection-start-line="290" selection-start-column="32" selection-end-line="290" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/include/Locale.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="33" column="11" lean-forward="true" selection-start-line="33" selection-start-column="11" selection-end-line="33" selection-end-column="11" />
+        <state relative-caret-position="801">
+          <caret line="84" column="39" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1395">
-          <caret line="47" column="28" lean-forward="true" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/include/DbOperation.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="121" column="9" lean-forward="true" selection-start-line="121" selection-start-column="9" selection-end-line="121" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/include/utils/ValidationRules.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="92" column="0" lean-forward="true" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+        <state relative-caret-position="426">
+          <caret line="560" column="51" lean-forward="true" selection-start-line="560" selection-start-column="51" selection-end-line="560" selection-end-column="51" />
           <folding />
         </state>
       </provider>

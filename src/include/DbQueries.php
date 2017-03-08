@@ -223,4 +223,12 @@
         WHERE cu.CUSTOMER_ID = ?'
     );
 
+    define(
+        'query_Update_ValidateAppointments',
+        'UPDATE ' . DB_NAME . '.tbl_appointments a 
+        SET a.ACTIVE = 0 
+        WHERE a.ACTIVE = 1 
+        AND a.EXPIRED_DATE < CURDATE()'
+    );
+
 ?>  

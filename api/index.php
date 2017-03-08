@@ -349,43 +349,6 @@ $app->post('/user/register', function ($request, $response) {
 });
 
 /* *
- * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
- * Parameters: none
- * Authorization: none
- * Method: POST
- * */
-$app->post('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
-    $validate = new ValidationRules();
-    $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
-    if (!$validityResult['valid']) {
-        return responseBuilder(401, $response, $validityResult['response']);
-    }
-
-    $db = new DbOperation();
-    $confirmAppointment['Update_ConfirmAppointment'] = array();
-    $result = array();
-
-    $confirmResultError = $db->confirmAppointment($args['appointmentId']);
-
-    if ($confirmResultError == 0) {
-        $result['status'] = '1';
-        $result['message'] = appointment_confirm_success_message;
-        $statusCode = 200;
-
-    } else {
-        $result['status'] = '0';
-        $result['error'] = internal_error_message;
-        $result['errorCode'] = internal_error_code;
-        $statusCode = 501;
-
-    }
-
-    array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
-
-    return responseBuilder($statusCode, $response, $confirmAppointment);
-});
-
-/* *
  * URL: http://210.211.109.180/drmuller/api/user/basicinformation
  * Parameters: none
  * Authorization: none
@@ -537,6 +500,71 @@ $app->put('/user/importantinformation', function ($request, $response) {
     array_push($updateImportantInfo['Update_ImportantInfo'], $result);
 
     return responseBuilder($statusCode, $response, $updateImportantInfo);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
+ * Parameters: none
+ * Authorization: none
+ * Method: POST
+ * */
+$app->post('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $db = new DbOperation();
+    $confirmAppointment['Update_ConfirmAppointment'] = array();
+    $result = array();
+
+    $confirmResultError = $db->confirmAppointment($args['appointmentId']);
+
+    if ($confirmResultError == 0) {
+        $result['status'] = '1';
+        $result['message'] = appointment_confirm_success_message;
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
+
+    return responseBuilder($statusCode, $response, $confirmAppointment);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/validate
+ * Parameters: none
+ * Authorization: none
+ * Method: POST
+ * */
+
+$app->put('/appointment/validate', function ($request, $response) {
+    $db = new DbOperation();
+    $updateValidateAppointments['Update_ValidateAppointments'] = array();
+    $result = array();
+
+    $updateResult = $db->validateAppointments();
+
+    if ($updateResult == 0) {
+        $result['message'] = appointments_validated_message;
+        $statusCode = 200;
+    } else {
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($updateValidateAppointments['Update_ValidateAppointments'], $result);
+
+    return responseBuilder($statusCode, $response, $updateValidateAppointments);
 });
 
 /* *
