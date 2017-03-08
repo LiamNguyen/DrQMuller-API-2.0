@@ -289,8 +289,8 @@ $app->post('/user/login', function ($request, $response) {
 
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
-        $customerInfo = $db->getCustomer($customerId);
-        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $customerInformation = $db->getCustomer($customerId);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
     } else {
@@ -383,8 +383,8 @@ $app->put('/user/basicinformation', function ($request, $response) {
     $updateBasicInformationResultError = $db->updateBasicInformation($informationArray);
     
     if ($updateBasicInformationResultError == 0) {
-        $customerInfo = $db->getCustomer($data->userId);
-        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $customerInformation = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
     } else {
@@ -434,8 +434,8 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
     $updateNecessaryInformationResultError = $db->updateNecessaryInformation($informationArray);
     
     if ($updateNecessaryInformationResultError == 0) {
-        $customerInfo = $db->getCustomer($data->userId);
-        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $customerInformation = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
     } else {
@@ -485,8 +485,8 @@ $app->put('/user/importantinformation', function ($request, $response) {
     $updateImportantInformationResultError = $db->updateImportantInformation($informationArray);
     
     if ($updateImportantInformationResultError == 0) {
-        $customerInfo = $db->getCustomer($data->userId);
-        $result = parseCustomerInformationToResponse($result, $customerInfo);
+        $customerInformation = $db->getCustomer($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
     } else {
@@ -503,12 +503,53 @@ $app->put('/user/importantinformation', function ($request, $response) {
 });
 
 /* *
+ * URL: http://210.211.109.180/drmuller/api/user/confirm/:customerid
+ * Parameters: none
+ * Authorization: none
+ * Method: PUT
+ * */
+
+$app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
+    $db = new DbOperation();
+    $confirmCustomer['Update_ConfirmCustomer'] = array();
+    $result = array();
+
+    $customerInformation = $db->getCustomer($args['customerId']);
+
+    if (empty($customerInformation)) {
+        $result['error'] = customer_not_found_message;
+        $result['errorCode'] = customer_not_found_code;
+
+        array_push($confirmCustomer['Update_ConfirmCustomer'], $result);
+
+        return responseBuilder(404, $response, $confirmCustomer);
+    } else {
+        $confirmResult = $db->confirmCustomer($args['customerId']);
+
+        if ($confirmResult == 0) {
+            $result['status'] = '1';
+            $result['message'] = customer_confirm_success_message;
+            $statusCode = 200;
+        } else {
+            $result['status'] = '0';
+            $result['error'] = internal_error_message;
+            $result['errorCode'] = internal_error_code;
+            $statusCode = 501;
+        }
+
+        array_push($confirmCustomer['Update_ConfirmCustomer'], $result);
+
+        return responseBuilder($statusCode, $response, $confirmCustomer);
+    }
+});
+
+/* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
  * Parameters: none
  * Authorization: none
  * Method: POST
  * */
-$app->post('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
+$app->put('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
     if (!$validityResult['valid']) {

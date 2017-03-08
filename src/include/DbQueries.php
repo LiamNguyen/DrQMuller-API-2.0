@@ -231,4 +231,11 @@
         AND a.EXPIRED_DATE < CURDATE()'
     );
 
+    define(
+        'query_Update_ConfirmCustomer',
+        'UPDATE ' . DB_NAME . '.tbl_customers c 
+        SET c.ACTIVE = 1 
+        WHERE c.CUSTOMER_ID  = ?'
+    );
+
 ?>  

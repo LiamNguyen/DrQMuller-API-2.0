@@ -86,4 +86,29 @@
         'All appointments have been validated'
     );
 
+    define(
+        'customer_not_found_message',
+        'Customer does not exist'
+    );
+
+    define(
+        'customer_not_found_code',
+        'customer-not-found'
+    );
+
+    define(
+        'appointment_not_found_message',
+        'Appointment does not exist'
+    );
+
+    define(
+        'appointment_not_found_code',
+        'appointment-not-found'
+    );
+
+    define(
+        'customer_confirm_success_message',
+        'Customer confirmed successfully'
+    );
+
 ?>

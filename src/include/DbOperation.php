@@ -160,7 +160,12 @@ class DbOperation
         $jwt = $this->createJwt($result);
         $resultArray['JWT'] = $jwt;
 
-        return $resultArray;
+        if (empty($resultArray['CUSTOMER_ID'])) {
+            return array();
+        } else {
+            return $resultArray;
+        }
+
     }
 
     //Method to let customer login 
@@ -270,7 +275,25 @@ class DbOperation
         }
     }
 
-    //Method to confirm appointment
+//Method to verify customer after email verification process
+    public function confirmCustomer($customerId) {
+        $sql = query_Update_ConfirmCustomer;
+
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Confirm sucess: 0 -> No error
+            return 0;
+        } else {
+            //Confirm failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+//Method to confirm appointment
     public function confirmAppointment($appointmentId) {
         $sql = query_Update_ConfirmAppointment;
         $stmt = $this->con->prepare($sql);
