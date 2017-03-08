@@ -1,7 +1,7 @@
 <?php
     define(
-        'invalid_username_or_password_message', '
-        Invalid username or password'
+        'invalid_username_or_password_message', 
+        'Invalid username or password'
     );
     define(
         'invalid_username_or_password_code', 
@@ -59,5 +59,26 @@
     define(
         'appointment_confirm_fail_message',
         'Appointment failed to be confirmed'
-    )
+    );
+
+    define(
+        'required_fields_missing_message',
+        'Required fields is missing'
+    );
+
+    define(
+        'required_fields_missing_code',
+        'required-fields-missing'
+    );
+
+    define(
+        'pattern_fail_message',
+        '\'s format is incorrect'
+    );
+
+    define(
+        'pattern_fail_code',
+        'pattern-fail'
+    );
+
 ?>

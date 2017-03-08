@@ -146,8 +146,8 @@ class DbOperation
 
     //Method to get customer 
     public function getCustomer($customerId) {
-        $token = $this->getGUID();
-        $this->updateSessionToken($customerId, $token);
+        // $token = $this->getGUID();
+        // $this->updateSessionToken($customerId, $token);
 
         $sql = query_Select_CustomerInfo;
         $stmt = $this->con->prepare($sql);
@@ -213,7 +213,6 @@ class DbOperation
         
 //**
 //Decide to rewriting UiSavedStep flag in database or not, if it is first time for basic information to be saved
-        $sql;
         if ($this->getUiFillStep($customerId) == 'none') {
         //** Rewriting flag
             $sql = query_Update_BasicInformation_FirstTime;
@@ -244,7 +243,6 @@ class DbOperation
         
 //**
 //Decide to rewriting UiSavedStep flag in database or not, if it is first time for basic information to be saved
-        $sql;
         if ($this->getUiFillStep($customerId) == 'basic') {
         //** Rewriting flag
             $sql = query_Update_NecessaryInformation_FirstTime;
@@ -330,7 +328,7 @@ class DbOperation
 
     //Method to insert new customer
     private function insertNewCustomer($username, $password) {
-        $saltAndPassword = $this->saltEncode($username, $password);
+        $saltAndPassword = $this->saltEncode($password);
         $salt = $saltAndPassword['salt'];
         $encodedPassword = $saltAndPassword['password'];
 
@@ -417,7 +415,7 @@ class DbOperation
     //Method to get user jwt
     private function createJwt($result) {
         if (mysqli_num_rows($result) <= 0) {
-            return;
+            return '';
         }
 
         $row = mysqli_fetch_assoc($result);
@@ -484,13 +482,13 @@ class DbOperation
         if (function_exists('com_create_guid')){
             return com_create_guid();
         } else {
-            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $charId = strtoupper(md5(uniqid(rand(), true)));
             $hyphen = chr(45);
-            $uuid = substr($charid, 0, 8).$hyphen
-                .substr($charid, 8, 4).$hyphen
-                .substr($charid,12, 4).$hyphen
-                .substr($charid,16, 4).$hyphen
-                .substr($charid,20,12);
+            $uuid = substr($charId, 0, 8).$hyphen
+                .substr($charId, 8, 4).$hyphen
+                .substr($charId,12, 4).$hyphen
+                .substr($charId,16, 4).$hyphen
+                .substr($charId,20,12);
             return $uuid;
         }
     }

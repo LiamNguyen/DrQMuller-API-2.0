@@ -30,6 +30,8 @@ require_once __DIR__ . '/../src/include/DbOperation.php';
 
 require_once __DIR__ . '/../src/include/Locale.php';
 
+require_once __DIR__ . '/../src/include/utils/ValidationRules.php';
+
 require __DIR__ . '/../lib/Prs/RequestInterface.php';
 
 require __DIR__ . '/../lib/Prs/ResponseInterface.php';
@@ -267,9 +269,15 @@ $app->get('/datasource/vouchers', function ($request, $response) {
  * Authorization: none
  * Method: POST
  * */
-$app->post('/user/signin', function ($request, $response) {
+$app->post('/user/login', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForLogin($data);
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
 
     $username = $data->username;
     $password = $data->password;
@@ -278,7 +286,6 @@ $app->post('/user/signin', function ($request, $response) {
 
     $customerLogin['Select_ToAuthenticate'] = array();
     $result = array();
-    $statusCode;
 
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
@@ -315,7 +322,6 @@ $app->post('/user/register', function ($request, $response) {
 
     $customerRegister['Insert_NewCustomer'] = array();
     $result = array();
-    $statusCode;
 
     $registerResult = $db->customerRegister($username, $password);
 
@@ -343,22 +349,21 @@ $app->post('/user/register', function ($request, $response) {
 });
 
 /* *
- * URL: http://210.211.109.180/drmuller/api/appointment/confirm/
+ * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
  * Parameters: none
  * Authorization: none
- * Method: GET
+ * Method: POST
  * */
 $app->post('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
-    $validityResult = isValidCustomer($request, $response, 'Update_ConfirmAppointment');
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
     if (!$validityResult['valid']) {
-        $authenticateResponse = array();
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
     $db = new DbOperation();
     $confirmAppointment['Update_ConfirmAppointment'] = array();
     $result = array();
-    $statusCode;
 
     $confirmResultError = $db->confirmAppointment($args['appointmentId']);
 
@@ -387,13 +392,18 @@ $app->post('/appointment/confirm/{appointmentId}', function ($request, $response
  * Method: PUT
  * */
 $app->put('/user/basicinformation', function ($request, $response) {
-    $validityResult = isValidCustomer($request, $response, 'Update_BasicInfo');
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_BasicInfo');
     if (!$validityResult['valid']) {
-        $authenticateResponse = array();
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
     $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateBasicInformation($data);
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
 
     $informationArray = array(
         'customerId' => $data->userId,
@@ -401,11 +411,11 @@ $app->put('/user/basicinformation', function ($request, $response) {
         'address' => $data->userAddress
     );
 
+
     $db = new DbOperation();
 
     $updateBasicInfo['Update_BasicInfo'] = array();
     $result = array();
-    $statusCode;
 
     $updateBasicInformationResultError = $db->updateBasicInformation($informationArray);
     
@@ -434,13 +444,18 @@ $app->put('/user/basicinformation', function ($request, $response) {
  * Method: PUT
  * */
 $app->put('/user/necessaryinformation', function ($request, $response) {
-    $validityResult = isValidCustomer($request, $response, 'Update_NecessaryInfo');
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_NecessaryInfo');
     if (!$validityResult['valid']) {
-        $authenticateResponse = array();
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
     $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateNecessaryInformation($data);
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
 
     $informationArray = array(
         'customerId' => $data->userId,
@@ -452,11 +467,10 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
 
     $updateNecessaryInfo['Update_NecessaryInfo'] = array();
     $result = array();
-    $statusCode;
 
     $updateNecessaryInformationResultError = $db->updateNecessaryInformation($informationArray);
     
-    if ($updateBasicInformationResultError == 0) {
+    if ($updateNecessaryInformationResultError == 0) {
         $customerInfo = $db->getCustomer($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInfo);
         $statusCode = 200;
@@ -481,13 +495,18 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
  * Method: PUT
  * */
 $app->put('/user/importantinformation', function ($request, $response) {
-    $validityResult = isValidCustomer($request, $response, 'Update_ImportantInfo');
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ImportantInfo');
     if (!$validityResult['valid']) {
-        $authenticateResponse = array();
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
     $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateImportantInformation($data);
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
 
     $informationArray = array(
         'customerId' => $data->userId,
@@ -499,7 +518,6 @@ $app->put('/user/importantinformation', function ($request, $response) {
 
     $updateImportantInfo['Update_ImportantInfo'] = array();
     $result = array();
-    $statusCode;
 
     $updateImportantInformationResultError = $db->updateImportantInformation($informationArray);
     
@@ -523,59 +541,21 @@ $app->put('/user/importantinformation', function ($request, $response) {
 
 /* *
  * Type: Helper method
- * Responsibility: Check session token along with customer ID for valid customer
- * */
-
-function isValidCustomer($request, $response, $requestName) {
-    $token = $request->getHeaderLine('Authorization');
-    $authenticateResponse[$requestName] = array();
-    $result = array();
-    $db = new DbOperation();
-    $isValidTokenResult;
-
-    $data = (object) $request->getParsedBody();
-
-    if (empty($data->userId)) {
-        $isValidTokenResult = $db->isValidToken($token);
-    } else {
-        $isValidTokenResult = $db->isValidTokenAndCustomerId($token, $data->userId);
-    }
-
-    if (!empty($token)) {
-        if (!$isValidTokenResult) {
-            $result['status'] = '0';
-            $result['error'] = invalid_token_message;
-            $result['errorCode'] = invalid_token_code;
-        } 
-
-    } else {
-        $result['status'] = '0';
-        $result['error'] = token_missing_message;
-        $result['errorCode'] = token_missing_code;
-    }
-
-    array_push($authenticateResponse[$requestName], $result);
-
-    return array('valid' => $isValidTokenResult, 'response' => $authenticateResponse);
-}
-
-/* *
- * Type: Helper method
  * Responsibility: Parsing data from customerInformation array to response array
  * */
 
- function parseCustomerInformationToResponse($resultResponse, $customerInformation) {
-        $resultResponse['customerId'] = $customerInformation['CUSTOMER_ID'];
-        $resultResponse['customerName'] = $customerInformation['CUSTOMER_NAME'];
-        $resultResponse['dob'] = $customerInformation['DOB'];
-        $resultResponse['gender'] = $customerInformation['GENDER'];
-        $resultResponse['phone'] = $customerInformation['PHONE'];
-        $resultResponse['address'] = $customerInformation['ADDRESS'];
-        $resultResponse['email'] = $customerInformation['EMAIL'];
-        $resultResponse['sessonToken'] = $customerInformation['SESSIONTOKEN']; 
-        $resultResponse['jwt'] = $customerInformation['JWT'];
+function parseCustomerInformationToResponse($resultResponse, $customerInformation) {
+    $resultResponse['customerId'] = $customerInformation['CUSTOMER_ID'];
+    $resultResponse['customerName'] = $customerInformation['CUSTOMER_NAME'];
+    $resultResponse['dob'] = $customerInformation['DOB'];
+    $resultResponse['gender'] = $customerInformation['GENDER'];
+    $resultResponse['phone'] = $customerInformation['PHONE'];
+    $resultResponse['address'] = $customerInformation['ADDRESS'];
+    $resultResponse['email'] = $customerInformation['EMAIL'];
+    $resultResponse['sessonToken'] = $customerInformation['SESSIONTOKEN']; 
+    $resultResponse['jwt'] = $customerInformation['JWT'];
 
-        return $resultResponse;
+    return $resultResponse;
  }
 
 /* *
