@@ -111,4 +111,9 @@
         'Customer confirmed successfully'
     );
 
+    define(
+        'time_release_success_message',
+        'Release time successfully'
+    )
+
 ?>

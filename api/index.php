@@ -588,7 +588,7 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
  * Parameters: none
  * Authorization: none
- * Method: POST
+ * Method: PUT
  * */
 $app->put('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
     $validate = new ValidationRules();
@@ -636,7 +636,7 @@ $app->put('/appointment/confirm/{appointmentId}', function ($request, $response,
  * URL: http://210.211.109.180/drmuller/api/appointment/validate
  * Parameters: none
  * Authorization: none
- * Method: POST
+ * Method: PUT
  * */
 
 $app->put('/appointment/validate', function ($request, $response) {
@@ -658,6 +658,42 @@ $app->put('/appointment/validate', function ($request, $response) {
     array_push($updateValidateAppointments['Update_ValidateAppointments'], $result);
 
     return responseBuilder($statusCode, $response, $updateValidateAppointments);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/time/release
+ * Parameters: none
+ * Authorization: none
+ * Method: PUT
+ * */
+
+$app->put('/time/release', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ReleaseTime');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $db = new DbOperation();
+    $data = (object) $request->getParsedBody();
+    $updateReleaseTime['Update_ReleaseTime'] = array();
+    $result = array();
+
+    $releaseResult = $db->releaseTime($data);
+
+    if ($releaseResult == 0) {
+        $result['status'] = '1';
+        $result['message'] = time_release_success_message;
+        $statusCode = 200;
+    } else {
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($updateReleaseTime['Update_ReleaseTime'], $result);
+
+    return responseBuilder($statusCode, $response, $updateReleaseTime);
 });
 
 /* *

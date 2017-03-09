@@ -256,7 +256,14 @@
         'query_Update_ConfirmCustomer',
         'UPDATE ' . DB_NAME . '.tbl_customers c 
         SET c.ACTIVE = 1 
-        WHERE c.CUSTOMER_ID  = ?'
+        WHERE c.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Update_ReleaseTime',
+        'UPDATE ' . DB_NAME . '.tbl_temporarybooked 
+        SET ACTIVE = 0 
+        WHERE '
     );
 
 ?>  

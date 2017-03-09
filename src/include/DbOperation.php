@@ -328,7 +328,6 @@ class DbOperation
 
     //Method to get appointment
     public function getAppointment($appointmentId) {
-
         $sql = query_Select_Appointment;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $appointmentId);
@@ -342,6 +341,61 @@ class DbOperation
             return $resultArray;
         }
 
+    }
+
+    //Method to release time
+    public function releaseTime($data) {
+
+        $whereStmtToReleaseTime = $this->formStringForWhereStatementToReleaseTime($data);
+        //**Example: LOCATION_ID = 1 AND DAY_ID = 1 AND TIME_ID = 2 AND MACHINE_ID = 2
+        // OR LOCATION_ID = 1 AND DAY_ID = 1 AND TIME_ID = 2 AND MACHINE_ID = 2
+
+        $sql = query_Update_ReleaseTime . $whereStmtToReleaseTime;
+        $stmt = $this->con->prepare($sql);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            //Register success: 0 -> No error
+            return 0;
+        } else {
+            //Register failed: 1 -> There is error
+            return 1;
+        }
+    }
+
+    //Method to build a where clause from array of object to release time
+    private function formStringForWhereStatementToReleaseTime($data) {
+        $time = $data->time;
+        $locationId = $data->locationId;
+        $sqlWhereStmt = '';
+        $index = 0;
+        foreach ($time as $value) {
+            $timeObj = (object) $value;
+
+            $sqlWhereStmt = $sqlWhereStmt
+                . 'LOCATION_ID = '
+                . $locationId
+                . ' AND '
+                . 'DAY_ID = '
+                . $timeObj->dayId
+                . ' AND '
+                . 'TIME_ID = '
+                . $timeObj->timeId
+                . ' AND '
+                . 'MACHINE_ID = '
+                . $timeObj->machineId;
+
+            $index++;
+
+            if ($index == count($time)) {
+                break;
+            }
+            $sqlWhereStmt = $sqlWhereStmt . ' OR ';
+
+        }
+
+        return $sqlWhereStmt;
     }
 
     //Method to check sessionToken is valid
