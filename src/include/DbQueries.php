@@ -97,7 +97,7 @@
     );
 
     define(
-        'query_Select_CustomerInfo', 
+        'query_Select_CustomerInfoByCustomerId',
         'SELECT cu.CUSTOMER_ID, CUSTOMER_NAME, DOB, GENDER, 
         PHONE, ADDRESS, EMAIL, UISAVEDSTEP, ACTIVE, ut.SESSIONTOKEN 
         FROM ' . DB_NAME . '.tbl_customers cu
@@ -105,7 +105,18 @@
         ON cu.CUSTOMER_ID = ut.CUSTOMER_ID
         WHERE cu.CUSTOMER_ID = ?
         AND STATUS = 1'
-    );                     
+    );
+
+    define(
+        'query_Select_CustomerInfoByUsername',
+        'SELECT cu.CUSTOMER_ID, CUSTOMER_NAME, DOB, GENDER, 
+            PHONE, ADDRESS, EMAIL, UISAVEDSTEP, ACTIVE, ut.SESSIONTOKEN 
+            FROM ' . DB_NAME . '.tbl_customers cu
+            INNER JOIN ' . DB_NAME . '.tbl_usertoken ut
+            ON cu.CUSTOMER_ID = ut.CUSTOMER_ID
+            WHERE cu.LOGIN_ID = ?
+            AND STATUS = 1'
+    );
 
     define(
         'query_Select_Salt', 
@@ -142,6 +153,15 @@
         FROM ' . DB_NAME . '.tbl_usertoken ut 
         WHERE ut.SESSIONTOKEN = ? 
         AND ut.CUSTOMER_ID = ?'
+    );
+
+    define(
+        'query_Select_CustomerId_FromTokenAndUsername',
+        'SELECT cu.LOGIN_ID 
+        FROM icaredb.tbl_usertoken ut 
+        INNER JOIN icaredb.tbl_customers cu ON ut.CUSTOMER_ID = cu.CUSTOMER_ID
+        WHERE ut.SESSIONTOKEN = ? 
+        AND cu.LOGIN_ID = ?'
     );
 
     define(
@@ -264,6 +284,13 @@
         'UPDATE ' . DB_NAME . '.tbl_temporarybooked 
         SET ACTIVE = 0 
         WHERE '
+    );
+
+    define(
+        'query_Update_ResetPassword',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu 
+        SET cu.PASSWORD = ?, cu.SALT = ? 
+        WHERE cu.LOGIN_ID  = ?'
     );
 
 ?>  

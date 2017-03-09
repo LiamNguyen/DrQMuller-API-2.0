@@ -144,12 +144,12 @@ class DbOperation
         return $selectedTime;
     }
 
-    //Method to get customer 
+    //Method to get customer by Id
     public function getCustomerByCustomerId($customerId) {
         // $token = $this->getGUID();
         // $this->updateSessionToken($customerId, $token);
 
-        $sql = query_Select_CustomerInfo;
+        $sql = query_Select_CustomerInfoByCustomerId;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $customerId);
         $stmt->execute();
@@ -166,6 +166,29 @@ class DbOperation
             return $resultArray;
         }
 
+    }
+
+    //Method to get customer by username
+    public function getCustomerByUsername($username) {
+        // $token = $this->getGUID();
+        // $this->updateSessionToken($customerId, $token);
+
+        $sql = query_Select_CustomerInfoByUsername;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $resultArray = $result->fetch_assoc();
+        $stmt->close();
+
+        $jwt = $this->createJwt($result);
+        $resultArray['JWT'] = $jwt;
+
+        if (empty($resultArray['CUSTOMER_ID'])) {
+            return array();
+        } else {
+            return $resultArray;
+        }
     }
 
     //Method to let customer login 
@@ -240,7 +263,22 @@ class DbOperation
         return $result;
     }
 
-//Method to update basic information of user 
+    //Method to reset password
+    public function resetPassword($username, $password) {
+        $saltAndPassword = $this->saltEncode($password);
+        $salt = $saltAndPassword['salt'];
+        $encodedPassword = $saltAndPassword['password'];
+
+        $sql = query_Update_ResetPassword;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sss', $encodedPassword, $salt, $username);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    //Method to update basic information of user
     public function updateImportantInformation($informationArray) {
         $customerId = $informationArray['customerId'];
         $email = $informationArray['email'];
@@ -257,7 +295,7 @@ class DbOperation
         return $result;
     }
 
-//Method to verify customer after email verification process
+    //Method to verify customer after email verification process
     public function confirmCustomer($customerId) {
         $sql = query_Update_ConfirmCustomer;
 
@@ -269,7 +307,7 @@ class DbOperation
         return $result;
     }
 
-//Method to confirm appointment
+    //Method to confirm appointment
     public function confirmAppointment($appointmentId) {
         $sql = query_Update_ConfirmAppointment;
         $stmt = $this->con->prepare($sql);
@@ -374,6 +412,19 @@ class DbOperation
         $sql = query_Select_CustomerId_FromTokenAndCustomerId;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ss', $token, $customerId);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
+    //Method to check sessionToken and username is valid
+    public function isValidTokenAndUsername($token, $username) {
+        $sql = query_Select_CustomerId_FromTokenAndUsername;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $token, $username);
         $stmt->execute();
         $stmt->store_result();
         $num_rows = $stmt->num_rows;

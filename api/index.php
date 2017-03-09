@@ -274,7 +274,7 @@ $app->post('/user/login', function ($request, $response) {
     $data = (object) $request->getParsedBody();
 
     $validate = new ValidationRules();
-    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForLogin($data);
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Select_ToAuthenticate');
     if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
@@ -314,6 +314,12 @@ $app->post('/user/login', function ($request, $response) {
 $app->post('/user/register', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Insert_NewCustomer');
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
 
     $username = $data->username;
     $password = $data->password;
@@ -547,6 +553,55 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
 
         return responseBuilder($statusCode, $response, $confirmCustomer);
     }
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/user/passwordreset
+ * Parameters: none
+ * Authorization: none
+ * Method: PUT
+ * */
+
+$app->put('/user/passwordreset', function($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ResetPassword');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Insert_NewCustomer');
+    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
+
+    $username = $data->username;
+    $password = $data->password;
+
+    $db = new DbOperation();
+    $resetPassword['Update_ResetPassword'] = array();
+    $result = array();
+    $resetPasswordSuccess = $db->resetPassword($username, $password);
+
+    if ($resetPasswordSuccess) {
+        $result['status'] = '1';
+        $result['message'] = reset_password_success_message;
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($resetPassword['Update_ResetPassword'], $result);
+
+    return responseBuilder($statusCode, $response, $resetPassword);
+
 });
 
 /* *

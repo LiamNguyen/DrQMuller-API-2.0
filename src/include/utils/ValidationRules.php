@@ -27,10 +27,12 @@ class ValidationRules {
 
         $data = (object) $request->getParsedBody();
 
-        if (empty($data->userId)) {
-            $isValidTokenResult = $db->isValidToken($token);
-        } else {
+        if (!empty($data->userId)) {
             $isValidTokenResult = $db->isValidTokenAndCustomerId($token, $data->userId);
+        } else if (!empty($data->username)) {
+            $isValidTokenResult = $db->isValidTokenAndUsername($token, $data->username);
+        } else {
+            $isValidTokenResult = $db->isValidToken($token);
         }
 
         if (!empty($token)) {
@@ -56,8 +58,8 @@ class ValidationRules {
 * Responsibility: Verify compulsory field in request body
 * */
 
-    function verifyRequiredFieldsForLogin($data) {
-        $customerLogin['Select_ToAuthenticate'] = array();
+    function verifyRequiredFieldsWithUsernameAndPassword($data, $requestName) {
+        $response[$requestName] = array();
         $result = array();
 
         //** Check if required fields are empty
@@ -65,9 +67,9 @@ class ValidationRules {
             $result['error'] = required_fields_missing_message;
             $result['errorCode'] = required_fields_missing_code;
 
-            array_push($customerLogin['Select_ToAuthenticate'], $result);
+            array_push($response[$requestName], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $customerLogin);
+            return array('errorCode' => required_fields_missing_code, 'response' => $response);
         }
 
         $dataArray = array(
@@ -89,9 +91,9 @@ class ValidationRules {
                 $result['error'] = $passwordPatternCheckResult['field'] . pattern_fail_message;
             }
 
-            array_push($customerLogin['Select_ToAuthenticate'], $result);
+            array_push($response[$requestName], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $customerLogin);
+            return array('errorCode' => required_fields_missing_code, 'response' => $response);
         }
 
     }

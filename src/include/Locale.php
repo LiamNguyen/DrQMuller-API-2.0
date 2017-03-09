@@ -114,6 +114,11 @@
     define(
         'time_release_success_message',
         'Release time successfully'
-    )
+    );
+
+    define(
+        'reset_password_success_message',
+        'Reset password successfully'
+    );
 
 ?>
