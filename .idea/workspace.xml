@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e97bb21-dd52-47f6-9fa5-d71e6bd13206" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/index.php" afterPath="$PROJECT_DIR$/api/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbOperation.php" afterPath="$PROJECT_DIR$/src/include/DbOperation.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbQueries.php" afterPath="$PROJECT_DIR$/src/include/DbQueries.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,11 +28,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="520" column="22" lean-forward="true" selection-start-line="520" selection-start-column="22" selection-end-line="520" selection-end-column="22" />
+            <state relative-caret-position="540">
+              <caret line="571" column="57" lean-forward="true" selection-start-line="571" selection-start-column="57" selection-end-line="571" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -47,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DbOperation.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DbOperation.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/DbOperation.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="251" column="9" lean-forward="true" selection-start-line="251" selection-start-column="9" selection-end-line="251" selection-end-column="9" />
+            <state relative-caret-position="405">
+              <caret line="335" column="41" lean-forward="false" selection-start-line="335" selection-start-column="41" selection-end-line="335" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -60,34 +61,37 @@
       <file leaf-file-name="DbQueries.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3165">
-              <caret line="211" column="11" lean-forward="false" selection-start-line="211" selection-start-column="11" selection-end-line="211" selection-end-column="11" />
+            <state relative-caret-position="300">
+              <caret line="161" column="30" lean-forward="true" selection-start-line="161" selection-start-column="30" selection-end-line="161" selection-end-column="30" />
               <folding>
-                <marker date="1489006842000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
-                <marker date="1489006842000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
-                <marker date="1489006842000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
-                <marker date="1489006842000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
-                <marker date="1489006842000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
-                <marker date="1489006842000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
-                <marker date="1489006842000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
-                <marker date="1489006842000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
-                <marker date="1489006842000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
-                <marker date="1489006842000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
-                <marker date="1489006842000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
-                <marker date="1489006842000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
-                <marker date="1489006842000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
-                <marker date="1489006842000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
-                <marker date="1489006842000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
-                <marker date="1489006842000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
-                <marker date="1489006842000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
-                <marker date="1489006842000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
-                <marker date="1489006842000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
-                <marker date="1489006842000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
-                <marker date="1489006842000" expanded="true" signature="4277:4377" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
-                <marker date="1489006842000" expanded="true" signature="4445:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-                <marker date="1489006842000" expanded="true" signature="4456:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-                <marker date="1489006842000" expanded="true" signature="6183:6318" ph="UPDATE tbl_a... " />
-                <marker date="1489006842000" expanded="true" signature="6389:6487" ph="UPDATE tbl_c... " />
+                <marker date="1489061614000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
+                <marker date="1489061614000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
+                <marker date="1489061614000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
+                <marker date="1489061614000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
+                <marker date="1489061614000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
+                <marker date="1489061614000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
+                <marker date="1489061614000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
+                <marker date="1489061614000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
+                <marker date="1489061614000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
+                <marker date="1489061614000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
+                <marker date="1489061614000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
+                <marker date="1489061614000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
+                <marker date="1489061614000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
+                <marker date="1489061614000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1489061614000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
+                <marker date="1489061614000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1489061614000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
+                <marker date="1489061614000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
+                <marker date="1489061614000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
+                <marker date="1489061614000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
+                <marker date="1489061614000" expanded="true" signature="4243:4250" ph="SELECT * FRO... tbl_appointments" />
+                <marker date="1489061614000" expanded="true" signature="4243:4515" ph="SELECT ap.AP... tbl_appointments" />
+                <marker date="1489061614000" expanded="true" signature="4243:4968" ph="SELECT * FRO... tbl_appointments" />
+                <marker date="1489061614000" expanded="true" signature="5069:5169" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
+                <marker date="1489061614000" expanded="true" signature="5237:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+                <marker date="1489061614000" expanded="true" signature="5248:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+                <marker date="1489061614000" expanded="true" signature="6975:7110" ph="UPDATE tbl_a... " />
+                <marker date="1489061614000" expanded="true" signature="7181:7279" ph="UPDATE tbl_c... " />
               </folding>
             </state>
           </provider>
@@ -115,6 +119,9 @@
       <find>getcustomer</find>
       <find>confirmCustomer</find>
       <find>confirmAppoin</find>
+      <find>getAppoint</find>
+      <find>APPOINTMENT</find>
+      <find>/user/</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -124,10 +131,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/include/utils/ValidationRules.php" />
-        <option value="$PROJECT_DIR$/src/include/DbQueries.php" />
-        <option value="$PROJECT_DIR$/src/include/DbOperation.php" />
         <option value="$PROJECT_DIR$/src/include/Locale.php" />
+        <option value="$PROJECT_DIR$/src/include/DbQueries.php" />
         <option value="$PROJECT_DIR$/api/index.php" />
+        <option value="$PROJECT_DIR$/src/include/DbOperation.php" />
       </list>
     </option>
   </component>
@@ -344,12 +351,12 @@
       <updated>1488991723811</updated>
       <workItem from="1488991726409" duration="10646000" />
       <workItem from="1489052118590" duration="268000" />
-      <workItem from="1489052485796" duration="855000" />
+      <workItem from="1489052485796" duration="5060000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11769000" />
+    <option name="totallyTimeSpent" value="15974000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="983" height="1080" extended-state="6" />
@@ -414,31 +421,34 @@
         <state relative-caret-position="3165">
           <caret line="211" column="11" lean-forward="true" selection-start-line="211" selection-start-column="11" selection-end-line="211" selection-end-column="11" />
           <folding>
-            <marker date="1489006842000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
-            <marker date="1489006842000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
-            <marker date="1489006842000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
-            <marker date="1489006842000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
-            <marker date="1489006842000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
-            <marker date="1489006842000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
-            <marker date="1489006842000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
-            <marker date="1489006842000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
-            <marker date="1489006842000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
-            <marker date="1489006842000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
-            <marker date="1489006842000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
-            <marker date="1489006842000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
-            <marker date="1489006842000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
-            <marker date="1489006842000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
-            <marker date="1489006842000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
-            <marker date="1489006842000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="4277:4377" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
-            <marker date="1489006842000" expanded="true" signature="4445:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-            <marker date="1489006842000" expanded="true" signature="4456:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-            <marker date="1489006842000" expanded="true" signature="6183:6318" ph="UPDATE tbl_a... " />
-            <marker date="1489006842000" expanded="true" signature="6389:6487" ph="UPDATE tbl_c... " />
+            <marker date="1489061614000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1489061614000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1489061614000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
+            <marker date="1489061614000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
+            <marker date="1489061614000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
+            <marker date="1489061614000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
+            <marker date="1489061614000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
+            <marker date="1489061614000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
+            <marker date="1489061614000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
+            <marker date="1489061614000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
+            <marker date="1489061614000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
+            <marker date="1489061614000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
+            <marker date="1489061614000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
+            <marker date="1489061614000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1489061614000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1489061614000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="4243:4250" ph="SELECT * FRO... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="4243:4515" ph="SELECT ap.AP... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="4243:4968" ph="SELECT * FRO... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="5069:5169" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
+            <marker date="1489061614000" expanded="true" signature="5237:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1489061614000" expanded="true" signature="5248:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1489061614000" expanded="true" signature="6975:7110" ph="UPDATE tbl_a... " />
+            <marker date="1489061614000" expanded="true" signature="7181:7279" ph="UPDATE tbl_c... " />
           </folding>
         </state>
       </provider>
@@ -458,53 +468,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="520" column="22" lean-forward="true" selection-start-line="520" selection-start-column="22" selection-end-line="520" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/include/utils/ValidationRules.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
           <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3165">
-          <caret line="211" column="11" lean-forward="false" selection-start-line="211" selection-start-column="11" selection-end-line="211" selection-end-column="11" />
-          <folding>
-            <marker date="1489006842000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
-            <marker date="1489006842000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
-            <marker date="1489006842000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
-            <marker date="1489006842000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
-            <marker date="1489006842000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
-            <marker date="1489006842000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
-            <marker date="1489006842000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
-            <marker date="1489006842000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
-            <marker date="1489006842000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
-            <marker date="1489006842000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
-            <marker date="1489006842000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
-            <marker date="1489006842000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
-            <marker date="1489006842000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
-            <marker date="1489006842000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
-            <marker date="1489006842000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
-            <marker date="1489006842000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
-            <marker date="1489006842000" expanded="true" signature="4277:4377" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
-            <marker date="1489006842000" expanded="true" signature="4445:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-            <marker date="1489006842000" expanded="true" signature="4456:4543" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
-            <marker date="1489006842000" expanded="true" signature="6183:6318" ph="UPDATE tbl_a... " />
-            <marker date="1489006842000" expanded="true" signature="6389:6487" ph="UPDATE tbl_c... " />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -516,10 +484,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/include/DbQueries.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="161" column="30" lean-forward="true" selection-start-line="161" selection-start-column="30" selection-end-line="161" selection-end-column="30" />
+          <folding>
+            <marker date="1489061614000" expanded="true" signature="149:244" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1489061614000" expanded="true" signature="308:471" ph="SELECT t.TIM... tbl_time" />
+            <marker date="1489061614000" expanded="true" signature="537:616" ph="SELECT co.CO... tbl_countries" />
+            <marker date="1489061614000" expanded="true" signature="719:822" ph="SELECT ci.CI... tbl_cities" />
+            <marker date="1489061614000" expanded="true" signature="888:999" ph="SELECT di.DI... tbl_districts" />
+            <marker date="1489061614000" expanded="true" signature="1066:1162" ph="SELECT wd.DA... tbl_weekdays" />
+            <marker date="1489061614000" expanded="true" signature="1228:1339" ph="SELECT lo.LO... tbl_locations" />
+            <marker date="1489061614000" expanded="true" signature="1404:1509" ph="SELECT MACHI... tbl_machines" />
+            <marker date="1489061614000" expanded="true" signature="1571:1640" ph="SELECT ty.TY... tbl_types" />
+            <marker date="1489061614000" expanded="true" signature="1705:1781" ph="SELECT VOUCH... tbl_vouchers" />
+            <marker date="1489061614000" expanded="true" signature="1850:2297" ph="SELECT t.TIM... tbl_appointmentschedule" />
+            <marker date="1489061614000" expanded="true" signature="1850:2640" ph="SELECT t.TIM... " />
+            <marker date="1489061614000" expanded="true" signature="2321:2614" ph="SELECT t.TIM... tbl_temporarybooked" />
+            <marker date="1489061614000" expanded="true" signature="2709:3026" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3108:3206" ph="SELECT cu.SA... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3273:3415" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3495:3608" ph="SELECT cu.CU... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="3684:3786" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1489061614000" expanded="true" signature="3875:4009" ph="SELECT ut.CU... tbl_usertoken" />
+            <marker date="1489061614000" expanded="true" signature="4075:4176" ph="SELECT cu.UI... tbl_customers" />
+            <marker date="1489061614000" expanded="true" signature="4243:4250" ph="SELECT * FRO... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="4243:4515" ph="SELECT ap.AP... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="4243:4968" ph="SELECT * FRO... tbl_appointments" />
+            <marker date="1489061614000" expanded="true" signature="5069:5169" ph="INSERT INTO ${DB_NAME}.tbl_customers... " />
+            <marker date="1489061614000" expanded="true" signature="5237:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1489061614000" expanded="true" signature="5248:5335" ph="INSERT INTO ${DB_NAME}.tbl_usertoken... " />
+            <marker date="1489061614000" expanded="true" signature="6975:7110" ph="UPDATE tbl_a... " />
+            <marker date="1489061614000" expanded="true" signature="7181:7279" ph="UPDATE tbl_c... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/include/DbOperation.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="251" column="9" lean-forward="true" selection-start-line="251" selection-start-column="9" selection-end-line="251" selection-end-column="9" />
+        <state relative-caret-position="405">
+          <caret line="335" column="41" lean-forward="false" selection-start-line="335" selection-start-column="41" selection-end-line="335" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="571" column="57" lean-forward="true" selection-start-line="571" selection-start-column="57" selection-end-line="571" selection-end-column="57" />
           <folding />
         </state>
       </provider>

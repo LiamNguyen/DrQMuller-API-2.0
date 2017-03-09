@@ -151,6 +151,27 @@
         WHERE cu.CUSTOMER_ID = ?'
     );
 
+    define(
+        'query_Select_Appointment',
+        'SELECT ap.APPOINTMENT_ID
+            , vc.VOUCHER
+            , ap.START_DATE
+            , ap.EXPIRED_DATE
+            , ty.TYPE
+            , lo.LOCATION_NAME
+            , cu.CUSTOMER_NAME
+            , ap.CREATEDAT
+            , ap.ISCONFIRMED
+            , ap.ACTIVE
+        FROM ' . DB_NAME . '.tbl_appointments ap 
+        INNER JOIN ' . DB_NAME . '.tbl_vouchers vc ON ap.VOUCHER_ID = vc.VOUCHER_ID
+        INNER JOIN ' . DB_NAME . '.tbl_types ty ON ap.TYPE_ID = ty.TYPE_ID
+        INNER JOIN ' . DB_NAME . '.tbl_locations lo ON ap.LOCATION_ID = lo.LOCATION_ID
+        INNER JOIN ' . DB_NAME . '.tbl_customers cu ON ap.CUSTOMER_ID = cu.CUSTOMER_ID
+        WHERE ap.APPOINTMENT_ID = ?
+        ORDER BY ap.CREATEDAT DESC'
+    );
+
 /* *
  * INSERT STATEMENTS
  * */

@@ -326,6 +326,24 @@ class DbOperation
         }
     }
 
+    //Method to get appointment
+    public function getAppointment($appointmentId) {
+
+        $sql = query_Select_Appointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $appointmentId);
+        $stmt->execute();
+        $resultArray = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (empty($resultArray['APPOINTMENT_ID'])) {
+            return array();
+        } else {
+            return $resultArray;
+        }
+
+    }
+
     //Method to check sessionToken is valid
     public function isValidToken($token) {
         $sql = query_Select_CustomerId_FromToken;

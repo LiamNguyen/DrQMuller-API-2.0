@@ -550,6 +550,41 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
 });
 
 /* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/:appointmentId
+ * Parameters: none
+ * Authorization: none
+ * Method: GET
+ * */
+
+$app->get('/appointment/{appointmentId}', function($request, $response, $args) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Select_Appointment');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $db = new DbOperation();
+    $getAppointment['Select_Appointment'] = array();
+    $result = array();
+
+    $appointmentInformation = $db->getAppointment($args['appointmentId']);
+    if (empty($appointmentInformation)) {
+        $result['error'] = appointment_not_found_message;
+        $result['errorCode'] = appointment_not_found_code;
+
+        array_push($getAppointment['Select_Appointment'], $result);
+
+        return responseBuilder(404, $response, $getAppointment);
+    } else {
+        $result = parseAppointmentInformationToResponse($result, $appointmentInformation);
+
+        array_push($getAppointment['Select_Appointment'], $result);
+
+        return responseBuilder(200, $response, $getAppointment);
+    }
+});
+
+/* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
  * Parameters: none
  * Authorization: none
@@ -632,6 +667,26 @@ function parseCustomerInformationToResponse($resultResponse, $customerInformatio
 
     return $resultResponse;
  }
+
+/* *
+* Type: Helper method
+* Responsibility: Parsing data from appointmentInformation array to response array
+* */
+
+function parseAppointmentInformationToResponse($resultResponse, $appointmentInformation) {
+    $resultResponse['appointmentId'] = $appointmentInformation['APPOINTMENT_ID'];
+    $resultResponse['voucher'] = $appointmentInformation['VOUCHER'];
+    $resultResponse['startDate'] = $appointmentInformation['START_DATE'];
+    $resultResponse['expiredDate'] = $appointmentInformation['EXPIRED_DATE'];
+    $resultResponse['type'] = $appointmentInformation['TYPE'];
+    $resultResponse['location'] = $appointmentInformation['LOCATION_NAME'];
+    $resultResponse['customerName'] = $appointmentInformation['CUSTOMER_NAME'];
+    $resultResponse['createdAt'] = $appointmentInformation['CREATEDAT'];
+    $resultResponse['isConfirmed'] = $appointmentInformation['ISCONFIRMED'];
+    $resultResponse['active'] = $appointmentInformation['ACTIVE'];
+
+    return $resultResponse;
+}
 
 /* *
  * Type: Helper method
