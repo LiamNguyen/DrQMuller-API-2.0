@@ -510,6 +510,12 @@ $app->put('/user/importantinformation', function ($request, $response) {
  * */
 
 $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmCustomer');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
     $db = new DbOperation();
     $confirmCustomer['Update_ConfirmCustomer'] = array();
     $result = array();
