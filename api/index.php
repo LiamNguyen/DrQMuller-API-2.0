@@ -289,7 +289,7 @@ $app->post('/user/login', function ($request, $response) {
 
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
-        $customerInformation = $db->getCustomer($customerId);
+        $customerInformation = $db->getCustomerByCustomerId($customerId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
@@ -383,7 +383,7 @@ $app->put('/user/basicinformation', function ($request, $response) {
     $updateBasicInformationSuccess = $db->updateBasicInformation($informationArray);
     
     if ($updateBasicInformationSuccess) {
-        $customerInformation = $db->getCustomer($data->userId);
+        $customerInformation = $db->getCustomerByCustomerId($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
@@ -434,7 +434,7 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
     $updateNecessaryInformationSuccess = $db->updateNecessaryInformation($informationArray);
     
     if ($updateNecessaryInformationSuccess) {
-        $customerInformation = $db->getCustomer($data->userId);
+        $customerInformation = $db->getCustomerByCustomerId($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
@@ -485,7 +485,7 @@ $app->put('/user/importantinformation', function ($request, $response) {
     $updateImportantInformationSuccess = $db->updateImportantInformation($informationArray);
     
     if ($updateImportantInformationSuccess) {
-        $customerInformation = $db->getCustomer($data->userId);
+        $customerInformation = $db->getCustomerByCustomerId($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
 
@@ -520,7 +520,7 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
     $confirmCustomer['Update_ConfirmCustomer'] = array();
     $result = array();
 
-    $customerInformation = $db->getCustomer($args['customerId']);
+    $customerInformation = $db->getCustomerByCustomerId($args['customerId']);
 
     if (empty($customerInformation)) {
         $result['error'] = customer_not_found_message;

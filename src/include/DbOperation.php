@@ -145,7 +145,7 @@ class DbOperation
     }
 
     //Method to get customer 
-    public function getCustomer($customerId) {
+    public function getCustomerByCustomerId($customerId) {
         // $token = $this->getGUID();
         // $this->updateSessionToken($customerId, $token);
 
