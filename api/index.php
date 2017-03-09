@@ -380,9 +380,9 @@ $app->put('/user/basicinformation', function ($request, $response) {
     $updateBasicInfo['Update_BasicInfo'] = array();
     $result = array();
 
-    $updateBasicInformationResultError = $db->updateBasicInformation($informationArray);
+    $updateBasicInformationSuccess = $db->updateBasicInformation($informationArray);
     
-    if ($updateBasicInformationResultError == 0) {
+    if ($updateBasicInformationSuccess) {
         $customerInformation = $db->getCustomer($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
@@ -431,9 +431,9 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
     $updateNecessaryInfo['Update_NecessaryInfo'] = array();
     $result = array();
 
-    $updateNecessaryInformationResultError = $db->updateNecessaryInformation($informationArray);
+    $updateNecessaryInformationSuccess = $db->updateNecessaryInformation($informationArray);
     
-    if ($updateNecessaryInformationResultError == 0) {
+    if ($updateNecessaryInformationSuccess) {
         $customerInformation = $db->getCustomer($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
@@ -482,9 +482,9 @@ $app->put('/user/importantinformation', function ($request, $response) {
     $updateImportantInfo['Update_ImportantInfo'] = array();
     $result = array();
 
-    $updateImportantInformationResultError = $db->updateImportantInformation($informationArray);
+    $updateImportantInformationSuccess = $db->updateImportantInformation($informationArray);
     
-    if ($updateImportantInformationResultError == 0) {
+    if ($updateImportantInformationSuccess) {
         $customerInformation = $db->getCustomer($data->userId);
         $result = parseCustomerInformationToResponse($result, $customerInformation);
         $statusCode = 200;
@@ -530,9 +530,9 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
 
         return responseBuilder(404, $response, $confirmCustomer);
     } else {
-        $confirmResult = $db->confirmCustomer($args['customerId']);
+        $confirmCustomerSuccess = $db->confirmCustomer($args['customerId']);
 
-        if ($confirmResult == 0) {
+        if ($confirmCustomerSuccess) {
             $result['status'] = '1';
             $result['message'] = customer_confirm_success_message;
             $statusCode = 200;
@@ -611,9 +611,9 @@ $app->put('/appointment/confirm/{appointmentId}', function ($request, $response,
 
         return responseBuilder(404, $response, $confirmAppointment);
     } else {
-        $confirmResultError = $db->confirmAppointment($args['appointmentId']);
+        $confirmAppointmentSuccess = $db->confirmAppointment($args['appointmentId']);
 
-        if ($confirmResultError == 0) {
+        if ($confirmAppointmentSuccess) {
             $result['status'] = '1';
             $result['message'] = appointment_confirm_success_message;
             $statusCode = 200;
@@ -644,9 +644,9 @@ $app->put('/appointment/validate', function ($request, $response) {
     $updateValidateAppointments['Update_ValidateAppointments'] = array();
     $result = array();
 
-    $updateResult = $db->validateAppointments();
+    $validateAppointmentSuccess = $db->validateAppointments();
 
-    if ($updateResult == 0) {
+    if ($validateAppointmentSuccess) {
         $result['message'] = appointments_validated_message;
         $statusCode = 200;
     } else {
@@ -679,9 +679,9 @@ $app->put('/time/release', function ($request, $response) {
     $updateReleaseTime['Update_ReleaseTime'] = array();
     $result = array();
 
-    $releaseResult = $db->releaseTime($data);
+    $releaseTimeSuccess = $db->releaseTime($data);
 
-    if ($releaseResult == 0) {
+    if ($releaseTimeSuccess) {
         $result['status'] = '1';
         $result['message'] = time_release_success_message;
         $statusCode = 200;

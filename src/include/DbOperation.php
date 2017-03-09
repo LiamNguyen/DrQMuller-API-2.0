@@ -213,13 +213,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
     //Method to update basic information of user 
@@ -243,13 +237,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
 //Method to update basic information of user 
@@ -266,13 +254,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
 //Method to verify customer after email verification process
@@ -284,13 +266,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm sucess: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
 //Method to confirm appointment
@@ -301,13 +277,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
     //Method to validate appointments
@@ -317,13 +287,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Confirm success: 0 -> No error
-            return 0;
-        } else {
-            //Confirm failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
     //Method to get appointment
@@ -355,13 +319,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
-            //Register success: 0 -> No error
-            return 0;
-        } else {
-            //Register failed: 1 -> There is error
-            return 1;
-        }
+        return $result;
     }
 
     //Method to build a where clause from array of object to release time
@@ -603,4 +561,5 @@ class DbOperation
             return $uuid;
         }
     }
+
 }
