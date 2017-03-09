@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0e97bb21-dd52-47f6-9fa5-d71e6bd13206" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/index.php" afterPath="$PROJECT_DIR$/api/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbOperation.php" afterPath="$PROJECT_DIR$/src/include/DbOperation.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include/DbQueries.php" afterPath="$PROJECT_DIR$/src/include/DbQueries.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,8 +29,8 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="571" column="57" lean-forward="true" selection-start-line="571" selection-start-column="57" selection-end-line="571" selection-end-column="57" />
+            <state relative-caret-position="510">
+              <caret line="614" column="0" lean-forward="true" selection-start-line="614" selection-start-column="0" selection-end-line="614" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -133,8 +131,8 @@
         <option value="$PROJECT_DIR$/src/include/utils/ValidationRules.php" />
         <option value="$PROJECT_DIR$/src/include/Locale.php" />
         <option value="$PROJECT_DIR$/src/include/DbQueries.php" />
-        <option value="$PROJECT_DIR$/api/index.php" />
         <option value="$PROJECT_DIR$/src/include/DbOperation.php" />
+        <option value="$PROJECT_DIR$/api/index.php" />
       </list>
     </option>
   </component>
@@ -351,12 +349,12 @@
       <updated>1488991723811</updated>
       <workItem from="1488991726409" duration="10646000" />
       <workItem from="1489052118590" duration="268000" />
-      <workItem from="1489052485796" duration="5060000" />
+      <workItem from="1489052485796" duration="5304000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15974000" />
+    <option name="totallyTimeSpent" value="16218000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="983" height="1080" extended-state="6" />
@@ -531,8 +529,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/api/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="571" column="57" lean-forward="true" selection-start-line="571" selection-start-column="57" selection-end-line="571" selection-end-column="57" />
+        <state relative-caret-position="510">
+          <caret line="614" column="0" lean-forward="true" selection-start-line="614" selection-start-column="0" selection-end-line="614" selection-end-column="0" />
           <folding />
         </state>
       </provider>

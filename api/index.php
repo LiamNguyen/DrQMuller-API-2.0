@@ -601,24 +601,35 @@ $app->put('/appointment/confirm/{appointmentId}', function ($request, $response,
     $confirmAppointment['Update_ConfirmAppointment'] = array();
     $result = array();
 
-    $confirmResultError = $db->confirmAppointment($args['appointmentId']);
+    $appointmentInformation = $db->getAppointment($args['appointmentId']);
 
-    if ($confirmResultError == 0) {
-        $result['status'] = '1';
-        $result['message'] = appointment_confirm_success_message;
-        $statusCode = 200;
+    if (empty($appointmentInformation)) {
+        $result['error'] = appointment_not_found_message;
+        $result['errorCode'] = appointment_not_found_code;
 
+        array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
+
+        return responseBuilder(404, $response, $confirmAppointment);
     } else {
-        $result['status'] = '0';
-        $result['error'] = internal_error_message;
-        $result['errorCode'] = internal_error_code;
-        $statusCode = 501;
+        $confirmResultError = $db->confirmAppointment($args['appointmentId']);
 
+        if ($confirmResultError == 0) {
+            $result['status'] = '1';
+            $result['message'] = appointment_confirm_success_message;
+            $statusCode = 200;
+
+        } else {
+            $result['status'] = '0';
+            $result['error'] = internal_error_message;
+            $result['errorCode'] = internal_error_code;
+            $statusCode = 501;
+
+        }
+
+        array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
+
+        return responseBuilder($statusCode, $response, $confirmAppointment);
     }
-
-    array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
-
-    return responseBuilder($statusCode, $response, $confirmAppointment);
 });
 
 /* *
