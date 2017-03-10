@@ -80,7 +80,7 @@ $app->get('/time/ecotime', function ($request, $response) {
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/time/selectedtime/:dayId/:locationId/:machineId
- * Parameters: none
+ * Parameters: dayId, locationId, machineId
  * Authorization: none
  * Method: GET
  * */
@@ -125,7 +125,7 @@ $app->get('/datasource/countries', function ($request, $response) {
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/datasource/cities/:countryId
- * Parameters: none
+ * Parameters: countryId
  * Authorization: none
  * Method: GET
  * */
@@ -145,7 +145,7 @@ $app->get('/datasource/cities/{countryId}', function ($request, $response, $args
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/datasource/districts/:cityId
- * Parameters: none
+ * Parameters: cityId
  * Authorization: none
  * Method: GET
  * */
@@ -161,6 +161,46 @@ $app->get('/datasource/districts/{cityId}', function ($request, $response, $args
     }
 
     return responseBuilder(200, $response, $districts);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/datasource/locations/:districtId
+ * Parameters: districtId
+ * Authorization: none
+ * Method: GET
+ * */
+$app->get('/datasource/locations/{districtId}', function ($request, $response, $args) {
+    $db = new DbOperation();
+    $result = $db->getLocations($args['districtId']);
+    $locations['Select_Locations'] = array();
+    $temp = array();
+
+    while($row = $result->fetch_object()) {
+        $temp = $row;
+        array_push($locations['Select_Locations'], $temp);
+    }
+
+    return responseBuilder(200, $response, $locations);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/datasource/machines/:locationId
+ * Parameters: locationId
+ * Authorization: none
+ * Method: GET
+ * */
+$app->get('/datasource/machines/{locationId}', function ($request, $response, $args) {
+    $db = new DbOperation();
+    $result = $db->getMachines($args['locationId']);
+    $machines['Select_Machines'] = array();
+    $temp = array();
+
+    while($row = $result->fetch_object()) {
+        $temp = $row;
+        array_push($machines['Select_Machines'], $temp);
+    }
+
+    return responseBuilder(200, $response, $machines);
 });
 
 /* *
@@ -181,46 +221,6 @@ $app->get('/datasource/daysofweek', function ($request, $response) {
     }
 
     return responseBuilder(200, $response, $daysOfWeek);
-});
-
-/* *
- * URL: http://210.211.109.180/drmuller/api/datasource/locations/:districtId
- * Parameters: none
- * Authorization: none
- * Method: GET
- * */
-$app->get('/datasource/locations/{districtId}', function ($request, $response, $args) {
-    $db = new DbOperation();
-    $result = $db->getLocations($args['districtId']);
-    $locations['Select_Locations'] = array();
-    $temp = array();
-
-    while($row = $result->fetch_object()) {
-        $temp = $row;
-        array_push($locations['Select_Locations'], $temp);
-    }
-
-    return responseBuilder(200, $response, $locations);
-});
-
-/* *
- * URL: http://210.211.109.180/drmuller/api/datasource/machines/:locationId
- * Parameters: none
- * Authorization: none
- * Method: GET
- * */
-$app->get('/datasource/machines/{locationId}', function ($request, $response, $args) {
-    $db = new DbOperation();
-    $result = $db->getMachines($args['locationId']);
-    $machines['Select_Machines'] = array();
-    $temp = array();
-
-    while($row = $result->fetch_object()) {
-        $temp = $row;
-        array_push($machines['Select_Machines'], $temp);
-    }
-
-    return responseBuilder(200, $response, $machines);
 });
 
 /* *
@@ -266,6 +266,11 @@ $app->get('/datasource/vouchers', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/login
  * Parameters: none
+ * Request body:
+ * {
+	"username": "username",
+	"password": "password"
+ * }
  * Authorization: none
  * Method: POST
  * */
@@ -308,6 +313,11 @@ $app->post('/user/login', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/register
  * Parameters: none
+ * Request body:
+ *{
+	"username": "username",
+	"password": "password"
+ * }
  * Authorization: none
  * Method: POST
  * */
@@ -357,7 +367,13 @@ $app->post('/user/register', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/basicinformation
  * Parameters: none
- * Authorization: none
+ * Request body:
+ * {
+      "userId": "1",
+      "userName": "Test",
+      "userAddress": "Test"
+ * }
+ * Authorization: Session Token to be matched with userId
  * Method: PUT
  * */
 $app->put('/user/basicinformation', function ($request, $response) {
@@ -409,7 +425,12 @@ $app->put('/user/basicinformation', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/necessaryinformation
  * Parameters: none
- * Authorization: none
+ * {
+      "userId": "3",
+      "userDob": "1900-02-02",
+      "userGender": "Female"
+ * }
+ * Authorization: Session Token to be matched with userId
  * Method: PUT
  * */
 $app->put('/user/necessaryinformation', function ($request, $response) {
@@ -460,7 +481,13 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/importantinformation
  * Parameters: none
- * Authorization: none
+ * Request body:
+ * {
+      "userId": "3",
+      "userEmail": "test@test.com",
+      "userPhone": "+138(04)-494498238"
+ * }
+ * Authorization: Session Token to be matched with userId
  * Method: PUT
  * */
 $app->put('/user/importantinformation', function ($request, $response) {
@@ -510,8 +537,8 @@ $app->put('/user/importantinformation', function ($request, $response) {
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/confirm/:customerid
- * Parameters: none
- * Authorization: none
+ * Parameters: customerId
+ * Authorization: Session Token
  * Method: PUT
  * */
 
@@ -558,7 +585,12 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/user/passwordreset
  * Parameters: none
- * Authorization: none
+ * Request body:
+ * {
+        "username": "pnguyen3",
+        "password": "pnguyen3"
+ * }
+ * Authorization: Session Token to be matched with username
  * Method: PUT
  * */
 
@@ -606,7 +638,7 @@ $app->put('/user/passwordreset', function($request, $response) {
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/:appointmentId
- * Parameters: none
+ * Parameters: appointmentId
  * Authorization: none
  * Method: GET
  * */
@@ -641,8 +673,8 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
- * Parameters: none
- * Authorization: none
+ * Parameters: appointmentId
+ * Authorization: Session Token
  * Method: PUT
  * */
 $app->put('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
@@ -718,7 +750,23 @@ $app->put('/appointment/validate', function ($request, $response) {
 /* *
  * URL: http://210.211.109.180/drmuller/api/time/release
  * Parameters: none
- * Authorization: none
+ * Request body:
+ * {
+      "locationId": "1",
+      "time": [
+        {
+            "dayId": "1",
+            "timeId": "48",
+            "machineId": "1"
+        },
+        {
+            "dayId": "1",
+            "timeId": "8",
+            "machineId": "1"
+        }
+      ]
+ * }
+ * Authorization: Session Token
  * Method: PUT
  * */
 
