@@ -353,6 +353,17 @@ class DbOperation
         return $result;
     }
 
+    //Method to cancel appointment
+    public function cancelAppointment($appointmentId) {
+        $sql = query_Update_CancelAppointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $appointmentId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
     //Method to validate appointments
     public function validateAppointments() {
         $sql = query_Update_ValidateAppointments;
@@ -460,6 +471,19 @@ class DbOperation
         $sql = query_Select_CustomerId_FromTokenAndUsername;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ss', $token, $username);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
+    //Method to check customer Id and appointment Id is valid
+    public function isValidCustomerIdAndAppointmentId($customerId, $appointmentId) {
+        $sql = query_Select_CustomerId_FromCustomerIdAndAppointmentId;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $customerId, $appointmentId);
         $stmt->execute();
         $stmt->store_result();
         $num_rows = $stmt->num_rows;

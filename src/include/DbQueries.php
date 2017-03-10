@@ -158,10 +158,19 @@
     define(
         'query_Select_CustomerId_FromTokenAndUsername',
         'SELECT cu.LOGIN_ID 
-        FROM icaredb.tbl_usertoken ut 
-        INNER JOIN icaredb.tbl_customers cu ON ut.CUSTOMER_ID = cu.CUSTOMER_ID
+        FROM ' . DB_NAME . '.tbl_usertoken ut 
+        INNER JOIN ' . DB_NAME . '.tbl_customers cu ON ut.CUSTOMER_ID = cu.CUSTOMER_ID
         WHERE ut.SESSIONTOKEN = ? 
         AND cu.LOGIN_ID = ?'
+    );
+
+    define(
+        'query_Select_CustomerId_FromCustomerIdAndAppointmentId',
+        'SELECT ap.CUSTOMER_ID 
+        FROM icaredb.tbl_appointments ap
+        WHERE ap.CUSTOMER_ID = ?
+        AND ap.APPOINTMENT_ID = ?
+        AND ap.ACTIVE = 1'
     );
 
     define(
@@ -302,8 +311,15 @@
 
     define(
         'query_Update_CustomerEmail',
-        'UPDATE ' . DB_NAME . '.tbl_customers 
-        SET EMAIL = ?, UPDATEDAT = ? WHERE CUSTOMER_ID = ?'
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.EMAIL = ?, cu.UPDATEDAT = ? WHERE cu.CUSTOMER_ID = ?'
     );
+
+    define(
+        'query_Update_CancelAppointment',
+        'UPDATE ' . DB_NAME . '.tbl_appointments ap
+        SET ap.ACTIVE = 0, ap.ISCANCEL = 1 
+        WHERE APPOINTMENT_ID = ?'
+    )
 
 ?>  

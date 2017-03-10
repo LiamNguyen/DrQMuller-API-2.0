@@ -57,6 +57,11 @@
     );
 
     define(
+        'appointment_cancel_success_message',
+        'Appointment cancelled successfully'
+    );
+
+    define(
         'appointment_confirm_fail_message',
         'Appointment failed to be confirmed'
     );
@@ -124,6 +129,6 @@
     define(
         'update_email_success_message',
         'Update email successfully'
-    )
+    );
 
 ?>

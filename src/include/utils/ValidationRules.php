@@ -280,6 +280,39 @@ class ValidationRules {
         }
     }
 
+/* *
+* Type: Helper method
+* Responsibility: Verify compulsory field in request body
+* */
+
+    function verifyRequiredFieldsWithCustomerIdAndAppointmentId($data, $requestName) {
+        $response[$requestName] = array();
+        $result = array();
+        $db = new DbOperation();
+
+        //** Check if required fields are empty
+        if (empty($data->userId) || empty($data->appointmentId)) {
+            $result['error'] = required_fields_missing_message;
+            $result['errorCode'] = required_fields_missing_code;
+
+            array_push($response[$requestName], $result);
+
+            return array('error' => true, 'response' => $response);
+        }
+
+        $isValidTokenResult = $db->isValidCustomerIdAndAppointmentId($data->userId, $data->appointmentId);
+        if (!$isValidTokenResult) {
+            $result['status'] = '0';
+            $result['error'] = invalid_token_message;
+            $result['errorCode'] = invalid_token_code;
+
+            array_push($response[$requestName], $result);
+
+            return array('error' => true, 'response' => $response);
+        }
+
+    }
+
     //Method to check fields pattern if is is matched or not
     function passedPatternCheck($dataArray, $valueToBeChecked, $pattern) {
         $match = preg_match($pattern, $valueToBeChecked);

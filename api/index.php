@@ -801,51 +801,108 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
 });
 
 /* *
- * URL: http://210.211.109.180/drmuller/api/appointment/confirm/:appointmentId
+ * URL: http://210.211.109.180/drmuller/api/appointment/confirm
  * Parameters: appointmentId
+ * Request body:
+ * {
+        "userId": "2",
+        "appointmentId": "20"
+ * }
  * Authorization: Session Token
  * Method: PUT
  * */
-$app->put('/appointment/confirm/{appointmentId}', function ($request, $response, $args) {
+$app->put('/appointment/confirm', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
     if (!$validityResult['valid']) {
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
+    $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithCustomerIdAndAppointmentId($data, 'Update_ConfirmAppointment');
+    if ($requiredFieldsValidityResult['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
+
+    $appointmentId = $data->appointmentId;
+
     $db = new DbOperation();
     $confirmAppointment['Update_ConfirmAppointment'] = array();
     $result = array();
 
-    $appointmentInformation = $db->getAppointment($args['appointmentId']);
+    $confirmAppointmentSuccess = $db->confirmAppointment($appointmentId);
 
-    if (empty($appointmentInformation)) {
-        $result['error'] = appointment_not_found_message;
-        $result['errorCode'] = appointment_not_found_code;
+    if ($confirmAppointmentSuccess) {
+        $result['status'] = '1';
+        $result['message'] = appointment_confirm_success_message;
+        $statusCode = 200;
 
-        array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
-
-        return responseBuilder(404, $response, $confirmAppointment);
     } else {
-        $confirmAppointmentSuccess = $db->confirmAppointment($args['appointmentId']);
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
 
-        if ($confirmAppointmentSuccess) {
-            $result['status'] = '1';
-            $result['message'] = appointment_confirm_success_message;
-            $statusCode = 200;
-
-        } else {
-            $result['status'] = '0';
-            $result['error'] = internal_error_message;
-            $result['errorCode'] = internal_error_code;
-            $statusCode = 501;
-
-        }
-
-        array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
-
-        return responseBuilder($statusCode, $response, $confirmAppointment);
     }
+
+    array_push($confirmAppointment['Update_ConfirmAppointment'], $result);
+
+    return responseBuilder($statusCode, $response, $confirmAppointment);
+});
+
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/cancel
+ * Parameters: appointmentId
+ *  * Request body:
+ * {
+        "userId": "2",
+        "appointmentId": "20"
+ * }
+ * Authorization: Session Token
+ * Method: PUT
+ * */
+$app->put('/appointment/cancel', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_CancelAppointment');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithCustomerIdAndAppointmentId($data, 'Update_CancelAppointment');
+    if ($requiredFieldsValidityResult['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
+
+    $appointmentId = $data->appointmentId;
+
+    $db = new DbOperation();
+    $cancelAppointment['Update_CancelAppointment'] = array();
+    $result = array();
+
+    $cancelAppointmentSuccess = $db->cancelAppointment($appointmentId);
+
+    if ($cancelAppointmentSuccess) {
+        $result['status'] = '1';
+        $result['message'] = appointment_cancel_success_message;
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($cancelAppointment['Update_CancelAppointment'], $result);
+
+    return responseBuilder($statusCode, $response, $cancelAppointment);
 });
 
 /* *
