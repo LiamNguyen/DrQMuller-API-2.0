@@ -150,7 +150,7 @@ class ValidationRules {
 * */
 
     function verifyRequiredFieldsForUpdateNecessaryInformation($data){
-        $UpdateNecessaryInfo['Update_NecessaryInfo'] = array();
+        $updateNecessaryInfo['Update_NecessaryInfo'] = array();
         $result = array();
 
 //** Check if required fields are empty
@@ -159,9 +159,9 @@ class ValidationRules {
             $result['error'] = required_fields_missing_message;
             $result['errorCode'] = required_fields_missing_code;
 
-            array_push($UpdateNecessaryInfo['Update_NecessaryInfo'], $result);
+            array_push($updateNecessaryInfo['Update_NecessaryInfo'], $result);
 
-            return array('error' => true, 'response' => $UpdateNecessaryInfo);
+            return array('error' => true, 'response' => $updateNecessaryInfo);
         }
 
         $dataArray = array(
@@ -184,9 +184,9 @@ class ValidationRules {
                 $result['error'] = $genderPatternCheckResult['field'] . pattern_fail_message;
             }
 
-            array_push($UpdateNecessaryInfo['Update_NecessaryInfo'], $result);
+            array_push($updateNecessaryInfo['Update_NecessaryInfo'], $result);
 
-            return array('error' => true, 'response' => $UpdateNecessaryInfo);
+            return array('error' => true, 'response' => $updateNecessaryInfo);
         }
     }
     
@@ -196,7 +196,7 @@ class ValidationRules {
 * */
 
     function verifyRequiredFieldsForUpdateImportantInformation($data){
-        $UpdateImportantInfo['Update_ImportantInfo'] = array();
+        $updateImportantInfo['Update_ImportantInfo'] = array();
         $result = array();
 
 //** Check if required fields are empty
@@ -205,9 +205,9 @@ class ValidationRules {
             $result['error'] = required_fields_missing_message;
             $result['errorCode'] = required_fields_missing_code;
 
-            array_push($UpdateImportantInfo['Update_ImportantInfo'], $result);
+            array_push($updateImportantInfo['Update_ImportantInfo'], $result);
 
-            return array('error' => true, 'response' => $UpdateImportantInfo);
+            return array('error' => true, 'response' => $updateImportantInfo);
         }
 
         $dataArray = array(
@@ -230,9 +230,53 @@ class ValidationRules {
                 $result['error'] = $phonePatternCheckResult['field'] . pattern_fail_message;
             }
 
-            array_push($UpdateImportantInfo['Update_ImportantInfo'], $result);
+            array_push($updateImportantInfo['Update_ImportantInfo'], $result);
 
-            return array('error' => true, 'response' => $UpdateImportantInfo);
+            return array('error' => true, 'response' => $updateImportantInfo);
+        }
+    }
+
+/* *
+* Type: Helper method
+* Responsibility: Verify compulsory field in request body
+* */
+
+    function verifyRequiredFieldsForUpdateCustomerEmail($data){
+        $updateCustomerEmail['Update_CustomerEmail'] = array();
+        $result = array();
+
+//** Check if required fields are empty
+        if (empty($data->userId) || empty($data->userEmail)) {
+            $result['status'] = '0';
+            $result['error'] = required_fields_missing_message;
+            $result['errorCode'] = required_fields_missing_code;
+
+            array_push($updateCustomerEmail['Update_CustomerEmail'], $result);
+
+            return array('error' => true, 'response' => $updateCustomerEmail);
+        }
+
+        $dataArray = array(
+            'customerId' => $data->userId,
+            'email' => $data->userEmail
+        );
+
+//** Check if required fields's patterns are match
+        $emailPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['email'], $this->emailRegEx);
+
+        if (!$emailPatternCheckResult['match']) {
+            $result['status'] = '0';
+            $result['errorCode'] = pattern_fail_code;
+
+            if (!empty($emailPatternCheckResult['field'])) {
+                $result['error'] = $emailPatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($phonePatternCheckResult['field'])) {
+                $result['error'] = $phonePatternCheckResult['field'] . pattern_fail_message;
+            }
+
+            array_push($updateCustomerEmail['Update_CustomerEmail'], $result);
+
+            return array('error' => true, 'response' => $updateCustomerEmail);
         }
     }
 

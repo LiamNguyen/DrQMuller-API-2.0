@@ -280,7 +280,7 @@ class DbOperation
         return $result;
     }
 
-    //Method to update all customer information
+    //Method to update customer's all information
     public function updateCustomerInformation($informationArray) {
         $customerId = $informationArray['customerId'];
         $customerName = $informationArray['customerName'];
@@ -294,6 +294,21 @@ class DbOperation
         $sql = query_Update_CustomerInformation;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ssssssss', $customerName, $address, $dob, $gender, $phone, $email, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    //Method to update customer's email
+    public function updateCustomerEmail($informationArray) {
+        $customerId = $informationArray['customerId'];
+        $email = $informationArray['email'];
+        $updatedAt = $this->getCurrentDateTime();
+
+        $sql = query_Update_CustomerEmail;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sss', $email, $updatedAt, $customerId);
         $result = $stmt->execute();
         $stmt->close();
 

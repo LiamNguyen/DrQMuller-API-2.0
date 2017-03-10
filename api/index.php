@@ -479,83 +479,7 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
 });
 
 /* *
- * URL: http://210.211.109.180/drmuller/api/user
- * Parameters: none
- * Request body:
- * {
-      "userId": "3",
-      "userName": "Test",
-      "userAddress": "Test",
-      "userDob": "1900-02-02",
-      "userGender": "Female",
-      "userEmail": "test@test.com",
-      "userPhone": "+138(04)-494498238"
- * }
- * Authorization: Session Token to be matched with userId
- * Method: PUT
- * */
-$app->put('/user/information', function ($request, $response) {
-    $validate = new ValidationRules();
-    $validityResult = $validate->isValidCustomer($request, 'Update_CustomerInformation');
-    if (!$validityResult['valid']) {
-        return responseBuilder(401, $response, $validityResult['response']);
-    }
-
-    $data = (object) $request->getParsedBody();
-
-    $requiredFieldsValidityResultForBasicInformation = $validate->verifyRequiredFieldsForUpdateBasicInformation($data);
-    $requiredFieldsValidityResultForNecessaryInformation = $validate->verifyRequiredFieldsForUpdateNecessaryInformation($data);
-    $requiredFieldsValidityResultForImportantInformation = $validate->verifyRequiredFieldsForUpdateImportantInformation($data);
-
-    if ($requiredFieldsValidityResultForBasicInformation['error']) {
-        return responseBuilder(400, $response, $requiredFieldsValidityResultForBasicInformation['response']);
-    }
-
-    if ($requiredFieldsValidityResultForNecessaryInformation['error']) {
-        return responseBuilder(400, $response, $requiredFieldsValidityResultForNecessaryInformation['response']);
-    }
-
-    if ($requiredFieldsValidityResultForImportantInformation['error']) {
-        return responseBuilder(400, $response, $requiredFieldsValidityResultForImportantInformation['response']);
-    }
-
-    $informationArray = array(
-        'customerId' => $data->userId,
-        'customerName' => $data->userName,
-        'address' => $data->userAddress,
-        'dob' => $data->userDob,
-        'gender' => $data->userGender,
-        'email' => $data->userEmail,
-        'phone' => $data->userPhone
-    );
-
-    $db = new DbOperation();
-
-    $updateCustomerInformation['Update_CustomerInformation'] = array();
-    $result = array();
-
-    $updateCustomerInformationSuccess = $db->updateCustomerInformation($informationArray);
-    
-    if ($updateCustomerInformationSuccess) {
-        $customerInformation = $db->getCustomerByCustomerId($data->userId);
-        $result = parseCustomerInformationToResponse($result, $customerInformation);
-        $statusCode = 200;
-
-    } else {
-        $result['status'] = '0';
-        $result['error'] = internal_error_message;
-        $result['errorCode'] = internal_error_code;
-        $statusCode = 501;
-
-    }
-
-    array_push($updateCustomerInformation['Update_CustomerInformation'], $result);
-
-    return responseBuilder($statusCode, $response, $updateCustomerInformation);
-});
-
-/* *
- * URL: http://210.211.109.180/drmuller/api/user
+ * URL: http://210.211.109.180/drmuller/api/user/importantinformation
  * Parameters: none
  * Request body:
  * {
@@ -566,7 +490,7 @@ $app->put('/user/information', function ($request, $response) {
  * Authorization: Session Token to be matched with userId
  * Method: PUT
  * */
-$app->put('/user', function ($request, $response) {
+$app->put('/user/importantinformation', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ImportantInfo');
     if (!$validityResult['valid']) {
@@ -609,6 +533,135 @@ $app->put('/user', function ($request, $response) {
     array_push($updateImportantInfo['Update_ImportantInfo'], $result);
 
     return responseBuilder($statusCode, $response, $updateImportantInfo);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/user
+ * Parameters: none
+ * Request body:
+ * {
+      "userId": "3",
+      "userName": "Test",
+      "userAddress": "Test",
+      "userDob": "1900-02-02",
+      "userGender": "Female",
+      "userEmail": "test@test.com",
+      "userPhone": "+138(04)-494498238"
+ * }
+ * Authorization: Session Token to be matched with userId
+ * Method: PUT
+ * */
+$app->put('/user', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_CustomerInformation');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResultForBasicInformation = $validate->verifyRequiredFieldsForUpdateBasicInformation($data);
+    $requiredFieldsValidityResultForNecessaryInformation = $validate->verifyRequiredFieldsForUpdateNecessaryInformation($data);
+    $requiredFieldsValidityResultForImportantInformation = $validate->verifyRequiredFieldsForUpdateImportantInformation($data);
+
+    if ($requiredFieldsValidityResultForBasicInformation['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForBasicInformation['response']);
+    }
+
+    if ($requiredFieldsValidityResultForNecessaryInformation['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForNecessaryInformation['response']);
+    }
+
+    if ($requiredFieldsValidityResultForImportantInformation['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForImportantInformation['response']);
+    }
+
+    $informationArray = array(
+        'customerId' => $data->userId,
+        'customerName' => $data->userName,
+        'address' => $data->userAddress,
+        'dob' => $data->userDob,
+        'gender' => $data->userGender,
+        'email' => $data->userEmail,
+        'phone' => $data->userPhone
+    );
+
+    $db = new DbOperation();
+    $updateCustomerInformation['Update_CustomerInformation'] = array();
+    $result = array();
+
+    $updateCustomerInformationSuccess = $db->updateCustomerInformation($informationArray);
+
+    if ($updateCustomerInformationSuccess) {
+        $customerInformation = $db->getCustomerByCustomerId($data->userId);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
+        $statusCode = 200;
+
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+
+    }
+
+    array_push($updateCustomerInformation['Update_CustomerInformation'], $result);
+
+    return responseBuilder($statusCode, $response, $updateCustomerInformation);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/user/email
+ * Parameters: none
+ * Request body:
+ * {
+      "userId": "3",
+      "userEmail": "test@test.com"
+ * }
+ * Authorization: Session Token to be matched with userId
+ * Method: PUT
+ * */
+
+$app->put('/user/email', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Update_CustomerEmail');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResultForCustomerEmail = $validate->verifyRequiredFieldsForUpdateCustomerEmail($data);
+
+    if ($requiredFieldsValidityResultForCustomerEmail['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForCustomerEmail['response']);
+    }
+
+    $informationArray = array(
+        'customerId' => $data->userId,
+        'email' => $data->userEmail
+    );
+
+    $db = new DbOperation();
+    $updateCustomerEmail['Update_CustomerEmail'] = array();
+    $result = array();
+
+    $updateCustomerEmailSuccess = $db->updateCustomerEmail($informationArray);
+
+    if ($updateCustomerEmailSuccess) {
+        $result['status'] = '1';
+        $result['message'] = update_email_success_message;
+        $statusCode = 200;
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($updateCustomerEmail['Update_CustomerEmail'], $result);
+
+    return responseBuilder($statusCode, $response, $updateCustomerEmail);
 });
 
 /* *

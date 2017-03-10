@@ -121,4 +121,9 @@
         'Reset password successfully'
     );
 
+    define(
+        'update_email_success_message',
+        'Update email successfully'
+    )
+
 ?>
