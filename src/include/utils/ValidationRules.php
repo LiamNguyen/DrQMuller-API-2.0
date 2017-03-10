@@ -69,7 +69,7 @@ class ValidationRules {
 
             array_push($response[$requestName], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $response);
+            return array('error' => true, 'response' => $response);
         }
 
         $dataArray = array(
@@ -93,7 +93,7 @@ class ValidationRules {
 
             array_push($response[$requestName], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $response);
+            return array('error' => true, 'response' => $response);
         }
 
     }
@@ -115,7 +115,7 @@ class ValidationRules {
 
             array_push($updateBasicInfo['Update_BasicInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $updateBasicInfo);
+            return array('error' => true, 'response' => $updateBasicInfo);
         }
 
         $dataArray = array(
@@ -140,7 +140,7 @@ class ValidationRules {
 
             array_push($updateBasicInfo['Update_BasicInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $updateBasicInfo);
+            return array('error' => true, 'response' => $updateBasicInfo);
         }
     }
     
@@ -161,7 +161,7 @@ class ValidationRules {
 
             array_push($UpdateNecessaryInfo['Update_NecessaryInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $UpdateNecessaryInfo);
+            return array('error' => true, 'response' => $UpdateNecessaryInfo);
         }
 
         $dataArray = array(
@@ -186,7 +186,7 @@ class ValidationRules {
 
             array_push($UpdateNecessaryInfo['Update_NecessaryInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $UpdateNecessaryInfo);
+            return array('error' => true, 'response' => $UpdateNecessaryInfo);
         }
     }
     
@@ -207,7 +207,7 @@ class ValidationRules {
 
             array_push($UpdateImportantInfo['Update_ImportantInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $UpdateImportantInfo);
+            return array('error' => true, 'response' => $UpdateImportantInfo);
         }
 
         $dataArray = array(
@@ -232,7 +232,7 @@ class ValidationRules {
 
             array_push($UpdateImportantInfo['Update_ImportantInfo'], $result);
 
-            return array('errorCode' => required_fields_missing_code, 'response' => $UpdateImportantInfo);
+            return array('error' => true, 'response' => $UpdateImportantInfo);
         }
     }
 

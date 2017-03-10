@@ -275,7 +275,7 @@ $app->post('/user/login', function ($request, $response) {
 
     $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Select_ToAuthenticate');
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
@@ -317,7 +317,7 @@ $app->post('/user/register', function ($request, $response) {
 
     $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Insert_NewCustomer');
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
@@ -370,7 +370,7 @@ $app->put('/user/basicinformation', function ($request, $response) {
     $data = (object) $request->getParsedBody();
 
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateBasicInformation($data);
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
@@ -422,7 +422,7 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
     $data = (object) $request->getParsedBody();
 
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateNecessaryInformation($data);
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
@@ -473,7 +473,7 @@ $app->put('/user/importantinformation', function ($request, $response) {
     $data = (object) $request->getParsedBody();
 
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForUpdateImportantInformation($data);
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
@@ -573,7 +573,7 @@ $app->put('/user/passwordreset', function($request, $response) {
 
     $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Insert_NewCustomer');
-    if ($requiredFieldsValidityResult['errorCode'] == required_fields_missing_code) {
+    if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
     }
 
