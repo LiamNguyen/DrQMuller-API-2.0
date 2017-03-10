@@ -293,4 +293,11 @@
         WHERE cu.LOGIN_ID  = ?'
     );
 
+    define(
+        'query_Update_CustomerInformation',
+        'UPDATE ' . DB_NAME . '.tbl_customers cu
+        SET cu.CUSTOMER_NAME = ?, cu.ADDRESS = ?, cu.DOB = ?, cu.GENDER = ?, cu.PHONE = ?, cu.EMAIL = ?, cu.UPDATEDAT = ? 
+        WHERE cu.CUSTOMER_ID = ?'
+    )
+
 ?>  

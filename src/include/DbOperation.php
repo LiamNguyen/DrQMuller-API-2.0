@@ -263,21 +263,6 @@ class DbOperation
         return $result;
     }
 
-    //Method to reset password
-    public function resetPassword($username, $password) {
-        $saltAndPassword = $this->saltEncode($password);
-        $salt = $saltAndPassword['salt'];
-        $encodedPassword = $saltAndPassword['password'];
-
-        $sql = query_Update_ResetPassword;
-        $stmt = $this->con->prepare($sql);
-        $stmt->bind_param('sss', $encodedPassword, $salt, $username);
-        $result = $stmt->execute();
-        $stmt->close();
-
-        return $result;
-    }
-
     //Method to update basic information of user
     public function updateImportantInformation($informationArray) {
         $customerId = $informationArray['customerId'];
@@ -289,6 +274,41 @@ class DbOperation
 
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ssss', $email, $phone, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    //Method to update all customer information
+    public function updateCustomerInformation($informationArray) {
+        $customerId = $informationArray['customerId'];
+        $customerName = $informationArray['customerName'];
+        $address = $informationArray['address'];
+        $dob = $informationArray['dob'];
+        $gender = $informationArray['gender'];
+        $email = $informationArray['email'];
+        $phone = $informationArray['phone'];
+        $updatedAt = $this->getCurrentDateTime();
+
+        $sql = query_Update_CustomerInformation;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssssssss', $customerName, $address, $dob, $gender, $phone, $email, $updatedAt, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    //Method to reset password
+    public function resetPassword($username, $password) {
+        $saltAndPassword = $this->saltEncode($password);
+        $salt = $saltAndPassword['salt'];
+        $encodedPassword = $saltAndPassword['password'];
+
+        $sql = query_Update_ResetPassword;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sss', $encodedPassword, $salt, $username);
         $result = $stmt->execute();
         $stmt->close();
 
