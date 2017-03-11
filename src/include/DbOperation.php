@@ -342,6 +342,27 @@ class DbOperation
         return $result;
     }
 
+    //Method to create new appointment
+    public function createAppointment($data) {
+        $this->con->autocommit(false);
+
+        $appointmentId = $this->insertNewAppointment($data);
+        $insertBookingScheduleSuccess = $this->insertNewBookingSchedule($data, $appointmentId);
+        $releaseTimeSuccess = $this->releaseTime($data);
+
+        if ($insertBookingScheduleSuccess && $releaseTimeSuccess) {
+            $this->con->commit();
+            $this->con->close();
+
+            return true;
+        } else {
+            $this->con->rollback();
+            $this->con->autocommit(true);
+
+            return false;
+        }
+    }
+
     //Method to confirm appointment
     public function confirmAppointment($appointmentId) {
         $sql = query_Update_ConfirmAppointment;
@@ -406,6 +427,24 @@ class DbOperation
         return $result;
     }
 
+    //Method to check time existence
+    public function timeExisted($data) {
+        $time = $data->time;
+
+        foreach ($time as $value) {
+            $timeObj = (object) $value;
+            $selectedTimeArray = $this->getSelectedTime($timeObj->dayId, $data->locationId, $timeObj->machineId);
+
+            while ($selectedTimeObj = $selectedTimeArray->fetch_object()) {
+                if ($selectedTimeObj->TIME_ID == $timeObj->timeId) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     //Method to build a where clause from array of object to release time
     private function formStringForWhereStatementToReleaseTime($data) {
         $time = $data->time;
@@ -438,6 +477,41 @@ class DbOperation
         }
 
         return $sqlWhereStmt;
+    }
+
+    //Method to build a values clause from array of object to insert
+    private function formStringToInsertNewBookingSchedule($data, $appointmentId) {
+        $time = $data->time;
+        $locationId = $data->locationId;
+        $sqlInsertStmt = '';
+        $index = 0;
+        foreach ($time as $value) {
+            $timeObj = (object) $value;
+
+            $sqlInsertStmt = $sqlInsertStmt
+                . '('
+                . $timeObj->dayId
+                . ', '
+                . $timeObj->timeId
+                . ', '
+                . $timeObj->machineId
+                . ', '
+                . $locationId
+                . ', '
+                . '\''
+                . $appointmentId
+                . '\''
+                . ')';
+
+            $index++;
+
+            if ($index == count($time)) {
+                break;
+            }
+            $sqlInsertStmt = $sqlInsertStmt . ', ';
+        }
+
+        return $sqlInsertStmt;
     }
 
     //Method to check sessionToken is valid
@@ -524,6 +598,42 @@ class DbOperation
             //Register failed: 1 -> There is error
             return 1;
         }
+    }
+
+    //Method to insert new appointment
+    private function insertNewAppointment($data) {
+        $appointmentId = $this->getGUID();
+        $startDate = $data->startDate;
+        $expiredDate = $data->expiredDate;
+        $typeId = $data->typeId;
+        $userId = $data->userId;
+        $voucherId = $data->voucherId;
+        $verificationCode = $data->verificationCode;
+        $locationId = $data->locationId;
+
+        $sql = query_Insert_NewAppointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssssssss', $appointmentId, $startDate, $expiredDate, $typeId, $userId, $voucherId, $verificationCode, $locationId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result) {
+            return $appointmentId;
+        } else {
+            return '';
+        }
+    }
+
+    //Method to insert new booking schedule
+    private function insertNewBookingSchedule($data, $appointmentId) {
+        $valuesToInsert = $this->formStringToInsertNewBookingSchedule($data, $appointmentId);
+        $sql = query_Insert_BookingSchedule . $valuesToInsert;
+
+        $stmt = $this->con->prepare($sql);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
     }
 
     //Method to encode salt and password for registration

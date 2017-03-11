@@ -732,7 +732,6 @@ $app->put('/user/passwordreset', function($request, $response) {
 
     $data = (object) $request->getParsedBody();
 
-    $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Insert_NewCustomer');
     if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
@@ -764,6 +763,89 @@ $app->put('/user/passwordreset', function($request, $response) {
     return responseBuilder($statusCode, $response, $resetPassword);
 
 });
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/create
+ * Parameters: none
+ *  * Request body:
+ * {
+        "startDate": "2016/12/02",
+        "expiredDate": "2016/12/30",
+        "typeId": "1",
+        "userId": "1",
+        "voucherId": "1",
+        "verificationCode": "DASFASDF",
+        "locationId": "1",
+        "time": [
+            {
+                "dayId": "1",
+                "timeId": "48",
+                "machineId": "2"
+            },
+            {
+                "dayId": "1",
+                "timeId": "8",
+                "machineId": "2"
+            },
+            {
+                "dayId": "1",
+                "timeId": "10",
+                "machineId": "2"
+            }
+        ]
+ * }
+ * Authorization: Session Token to be matched with customerId
+ * Method: POST
+ * */
+
+$app->post('/appointment/create', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Insert_NewAppointment');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsForCreateNewAppointment($data);
+    if ($requiredFieldsValidityResult['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
+
+    $db = new DbOperation();
+    $createAppointment['Insert_NewAppointment'] = array();
+    $result = array();
+
+    if ($db->timeExisted($data)) {
+        $result['status'] = '0';
+        $result['error'] = time_existed_message;
+        $result['errorCode'] = time_existed_code;
+        $statusCode = 400;
+
+        array_push($createAppointment['Insert_NewAppointment'], $result);
+
+        return responseBuilder($statusCode, $response, $createAppointment);
+    }
+
+    $createAppointmentSuccess = $db->createAppointment($data);
+
+    if ($createAppointmentSuccess) {
+        $result['status'] = '1';
+        $result['message'] = appointment_create_success_message;
+        $statusCode = 200;
+    } else {
+        $result['status'] = '0';
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($createAppointment['Insert_NewAppointment'], $result);
+
+    return responseBuilder($statusCode, $response, $createAppointment);
+
+});
+
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/:appointmentId
@@ -820,7 +902,6 @@ $app->put('/appointment/confirm', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
 
-    $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithCustomerIdAndAppointmentId($data, 'Update_ConfirmAppointment');
     if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
@@ -873,7 +954,6 @@ $app->put('/appointment/cancel', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
 
-    $validate = new ValidationRules();
     $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithCustomerIdAndAppointmentId($data, 'Update_CancelAppointment');
     if ($requiredFieldsValidityResult['error']) {
         return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
@@ -1011,6 +1091,7 @@ function parseCustomerInformationToResponse($resultResponse, $customerInformatio
 
 function parseAppointmentInformationToResponse($resultResponse, $appointmentInformation) {
     $resultResponse['appointmentId'] = $appointmentInformation['APPOINTMENT_ID'];
+    $resultResponse['displayId'] = $appointmentInformation['DISPLAY_ID'];
     $resultResponse['voucher'] = $appointmentInformation['VOUCHER'];
     $resultResponse['startDate'] = $appointmentInformation['START_DATE'];
     $resultResponse['expiredDate'] = $appointmentInformation['EXPIRED_DATE'];

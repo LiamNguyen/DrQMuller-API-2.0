@@ -52,6 +52,11 @@
     );
 
     define(
+        'appointment_create_success_message',
+        'Appointment created successfully'
+    );
+
+    define(
         'appointment_confirm_success_message',
         'Appointment confirmed successfully'
     );
@@ -130,5 +135,15 @@
         'update_email_success_message',
         'Update email successfully'
     );
+
+    define(
+        'time_existed_message',
+        'Time has been chosen..Hacker!! :))'
+    );
+
+    define(
+        'time_existed_code',
+        'time-existed'
+    )
 
 ?>

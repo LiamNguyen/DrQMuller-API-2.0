@@ -183,6 +183,7 @@
     define(
         'query_Select_Appointment',
         'SELECT ap.APPOINTMENT_ID
+            , ap.DISPLAY_ID
             , vc.VOUCHER
             , ap.START_DATE
             , ap.EXPIRED_DATE
@@ -217,7 +218,21 @@
         'INSERT INTO ' . DB_NAME . '.tbl_usertoken
         (CUSTOMER_ID, SESSIONTOKEN)
         VALUES(?, ?)'
-    );  
+    );
+
+    define(
+        'query_Insert_NewAppointment',
+        'INSERT INTO ' . DB_NAME . '.tbl_appointments 
+        (APPOINTMENT_ID, START_DATE, EXPIRED_DATE, TYPE_ID, CUSTOMER_ID, VOUCHER_ID, VERIFICATION_CODE, LOCATION_ID) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+
+    define(
+        'query_Insert_BookingSchedule',
+        'INSERT INTO ' . DB_NAME . '.tbl_appointmentschedule
+        (DAY_ID, TIME_ID, MACHINE_ID, LOCATION_ID, APPOINTMENT_ID) 
+        VALUES '
+    );
 
 /* *
  * UPDATE STATEMENTS

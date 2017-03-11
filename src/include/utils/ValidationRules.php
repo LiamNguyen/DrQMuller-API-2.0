@@ -13,6 +13,14 @@ class ValidationRules {
     private $genderRegEx = '/^(?:Male|Female)$/';
     private $emailRegEx = '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
     private $phoneRegEx = '/^\\+?[0-9]+[0-9\\-\\s]+\\(?[0-9]+\\)?[0-9\\-\\s]{0,12}$/';
+    private $dateRegEx = '/^\d\d\d\d[- \/.](0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])/';
+    private $typeIdRegex = '/^(?:1|2)$/';
+    private $voucherIdRegEx = '/^(?:1|2)$/';
+    private $verificationCodeRegEx = '/^[A-Z]{8}$/';
+    private $locationIdRegEx = '/^(?:1)$/';
+    private $dayIdRegEx = '/^[1-7]+$/';
+    private $timeIdRegEx = '/^(?:((1|2|3|4|5)?\d)|((6)[0-6]))$/';
+    private $machineIdRegEx = '/^(?:1|2)$/';
 
 /* *
 * Type: Helper method
@@ -96,6 +104,8 @@ class ValidationRules {
             return array('error' => true, 'response' => $response);
         }
 
+        return array('error' => false);
+
     }
 
 /* *
@@ -119,7 +129,6 @@ class ValidationRules {
         }
 
         $dataArray = array(
-            'customerId' => $data->userId,
             'customerName' => $data->userName,
             'address' => $data->userAddress
         );
@@ -142,6 +151,9 @@ class ValidationRules {
 
             return array('error' => true, 'response' => $updateBasicInfo);
         }
+
+        return array('error' => false);
+
     }
     
 /* *
@@ -165,7 +177,6 @@ class ValidationRules {
         }
 
         $dataArray = array(
-            'customerId' => $data->userId,
             'dob' => $data->userDob,
             'gender' => $data->userGender
         );
@@ -188,6 +199,9 @@ class ValidationRules {
 
             return array('error' => true, 'response' => $updateNecessaryInfo);
         }
+
+        return array('error' => false);
+
     }
     
 /* *
@@ -211,7 +225,6 @@ class ValidationRules {
         }
 
         $dataArray = array(
-            'customerId' => $data->userId,
             'email' => $data->userEmail,
             'phone' => $data->userPhone
         );
@@ -234,6 +247,9 @@ class ValidationRules {
 
             return array('error' => true, 'response' => $updateImportantInfo);
         }
+
+        return array('error' => false);
+
     }
 
 /* *
@@ -257,7 +273,6 @@ class ValidationRules {
         }
 
         $dataArray = array(
-            'customerId' => $data->userId,
             'email' => $data->userEmail
         );
 
@@ -270,14 +285,15 @@ class ValidationRules {
 
             if (!empty($emailPatternCheckResult['field'])) {
                 $result['error'] = $emailPatternCheckResult['field'] . pattern_fail_message;
-            } else if (!empty($phonePatternCheckResult['field'])) {
-                $result['error'] = $phonePatternCheckResult['field'] . pattern_fail_message;
             }
 
             array_push($updateCustomerEmail['Update_CustomerEmail'], $result);
 
             return array('error' => true, 'response' => $updateCustomerEmail);
         }
+
+        return array('error' => false);
+
     }
 
 /* *
@@ -290,7 +306,7 @@ class ValidationRules {
         $result = array();
         $db = new DbOperation();
 
-        //** Check if required fields are empty
+//** Check if required fields are empty
         if (empty($data->userId) || empty($data->appointmentId)) {
             $result['error'] = required_fields_missing_message;
             $result['errorCode'] = required_fields_missing_code;
@@ -311,6 +327,135 @@ class ValidationRules {
             return array('error' => true, 'response' => $response);
         }
 
+        return array('error' => false);
+
+    }
+
+/* *
+* Type: Helper method
+* Responsibility: Verify compulsory field in request body
+* */
+
+    function verifyRequiredFieldsForCreateNewAppointment($data) {
+        $createAppointment['Insert_NewAppointment'] = array();
+        $result = array();
+
+//** Check if required fields are empty
+        if (empty($data->startDate) || empty($data->expiredDate) || empty($data->typeId) ||
+            empty($data->userId) || empty($data->voucherId) || empty($data->verificationCode) ||
+            empty($data->locationId) || empty($data->time)) {
+
+            $result['error'] = required_fields_missing_message;
+            $result['errorCode'] = required_fields_missing_code;
+
+            array_push($createAppointment['Insert_NewAppointment'], $result);
+
+            return array('error' => true, 'response' => $createAppointment);
+        }
+
+        $requiredFieldsValidityResultForReleasingTime = $this->verifyRequiredFieldsForReleaseTime($data, 'Insert_NewAppointment');
+
+        if ($requiredFieldsValidityResultForReleasingTime['error']) {
+            return array('error' => true, 'response' => $requiredFieldsValidityResultForReleasingTime['response']);
+        }
+
+        $dataArray = array(
+            'startDate' => $data->startDate,
+            'expiredDate' => $data->expiredDate,
+            'typeId' => $data->typeId,
+            'voucherId' => $data->voucherId,
+            'verificationCode' => $data->verificationCode,
+            'locationId' => $data->locationId
+        );
+
+//** Check if required fields's patterns are match
+        $startDatePatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['startDate'], $this->dateRegEx);
+        $expireDatePatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['expiredDate'], $this->dateRegEx);
+        $typeIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['typeId'], $this->typeIdRegex);
+        $voucherIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['voucherId'], $this->voucherIdRegEx);
+        $verificationCodePatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['verificationCode'], $this->verificationCodeRegEx);
+        $locationIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['locationId'], $this->locationIdRegEx);
+
+        if (!$startDatePatternCheckResult['match'] || !$expireDatePatternCheckResult['match'] || !$typeIdPatternCheckResult['match'] ||
+            !$voucherIdPatternCheckResult['match'] || !$verificationCodePatternCheckResult['match'] || !$locationIdPatternCheckResult['match']) {
+            $result['status'] = '0';
+            $result['errorCode'] = pattern_fail_code;
+
+            if (!empty($startDatePatternCheckResult['field'])) {
+                $result['error'] = $startDatePatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($expireDatePatternCheckResult['field'])) {
+                $result['error'] = $expireDatePatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($typeIdPatternCheckResult['field'])) {
+                $result['error'] = $typeIdPatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($voucherIdPatternCheckResult['field'])) {
+                $result['error'] = $voucherIdPatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($verificationCodePatternCheckResult['field'])) {
+                $result['error'] = $verificationCodePatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($locationIdPatternCheckResult['field'])) {
+                $result['error'] = $locationIdPatternCheckResult['field'] . pattern_fail_message;
+            }
+
+            array_push($createAppointment['Insert_NewAppointment'], $result);
+
+            return array('error' => true, 'response' => $createAppointment);
+        }
+
+        return array('error' => false);
+
+    }
+
+/* *
+* Type: Helper method
+* Responsibility: Verify compulsory field in request body
+* */
+
+    function verifyRequiredFieldsForReleaseTime($data, $requestName) {
+        $response[$requestName] = array();
+
+        foreach ($data->time as $value) {
+            $timeObj = (object) $value;
+
+//** Check if required fields are empty
+            if (empty($timeObj->dayId) || empty($timeObj->timeId) || empty($timeObj->machineId)) {
+                $result['error'] = required_fields_missing_message;
+                $result['errorCode'] = required_fields_missing_code;
+
+                array_push($response[$requestName], $result);
+
+                return array('error' => true, 'response' => $response);
+            }
+
+            $dataArray = array(
+                'dayId' => $timeObj->dayId,
+                'timeId' => $timeObj->timeId,
+                'machineId' => $timeObj->machineId
+            );
+
+//** Check if required fields's patterns are match
+            $dayIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['dayId'], $this->dayIdRegEx);
+            $timeIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['timeId'], $this->timeIdRegEx);
+            $machineIdPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['machineId'], $this->machineIdRegEx);
+
+            if (!$dayIdPatternCheckResult['match'] || !$timeIdPatternCheckResult['match'] || !$machineIdPatternCheckResult['match']) {
+                $result['status'] = '0';
+                $result['errorCode'] = pattern_fail_code;
+
+                if (!empty($dayIdPatternCheckResult['field'])) {
+                    $result['error'] = $dayIdPatternCheckResult['field'] . pattern_fail_message;
+                } else if (!empty($timeIdPatternCheckResult['field'])) {
+                    $result['error'] = $timeIdPatternCheckResult['field'] . pattern_fail_message;
+                } else if (!empty($machineIdPatternCheckResult['field'])) {
+                    $result['error'] = $machineIdPatternCheckResult['field'] . pattern_fail_message;
+                }
+
+                array_push($response[$requestName], $result);
+
+                return array('error' => true, 'response' => $response);
+            }
+
+        }
+
+        return array('error' => false);
     }
 
     //Method to check fields pattern if is is matched or not
