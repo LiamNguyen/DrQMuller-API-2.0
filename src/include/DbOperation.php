@@ -236,7 +236,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to update basic information of user 
@@ -260,7 +265,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to update basic information of user
@@ -277,7 +287,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to update customer's all information
@@ -297,7 +312,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to update customer's email
@@ -312,7 +332,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to reset password
@@ -327,7 +352,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to verify customer after email verification process
@@ -339,7 +369,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to create new appointment
@@ -371,7 +406,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to cancel appointment
@@ -382,7 +422,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to validate appointments
@@ -392,7 +437,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to get appointment
@@ -484,7 +534,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to check time existence
@@ -557,7 +612,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to get locationId, dayId, timeId, machineId from data
@@ -771,7 +831,12 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        return $result;
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to encode salt and password for registration
