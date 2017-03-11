@@ -353,10 +353,10 @@ class ValidationRules {
             return array('error' => true, 'response' => $createAppointment);
         }
 
-        $requiredFieldsValidityResultForReleasingTime = $this->verifyRequiredFieldsForReleaseTime($data, 'Insert_NewAppointment');
+        $requiredFieldsValidityResultForTimeData = $this->verifyRequiredFieldsForTimeData($data, 'Insert_NewAppointment');
 
-        if ($requiredFieldsValidityResultForReleasingTime['error']) {
-            return array('error' => true, 'response' => $requiredFieldsValidityResultForReleasingTime['response']);
+        if ($requiredFieldsValidityResultForTimeData['error']) {
+            return array('error' => true, 'response' => $requiredFieldsValidityResultForTimeData['response']);
         }
 
         $dataArray = array(
@@ -409,7 +409,7 @@ class ValidationRules {
 * Responsibility: Verify compulsory field in request body
 * */
 
-    function verifyRequiredFieldsForReleaseTime($data, $requestName) {
+    function verifyRequiredFieldsForTimeData($data, $requestName) {
         $response[$requestName] = array();
 
         foreach ($data->time as $value) {

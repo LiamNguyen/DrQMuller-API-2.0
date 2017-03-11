@@ -202,6 +202,16 @@
         ORDER BY ap.CREATEDAT DESC'
     );
 
+    define(
+        'query_Select_TemporarySelectedTime',
+        'SELECT temp.ID
+        FROM ' . DB_NAME . '.tbl_temporarybooked temp
+        WHERE DAY_ID = ? 
+        AND TIME_ID = ?
+        AND LOCATION_ID = ?
+        AND MACHINE_ID = ?'
+    );
+
 /* *
  * INSERT STATEMENTS
  * */
@@ -232,6 +242,13 @@
         'INSERT INTO ' . DB_NAME . '.tbl_appointmentschedule
         (DAY_ID, TIME_ID, MACHINE_ID, LOCATION_ID, APPOINTMENT_ID) 
         VALUES '
+    );
+
+    define(
+        'query_Insert_NewTemporaryTime',
+        'INSERT INTO ' . DB_NAME . '.tbl_temporarybooked 
+        (DAY_ID, TIME_ID, LOCATION_ID, MACHINE_ID) 
+        VALUES (?, ?, ?, ?)'
     );
 
 /* *
@@ -335,6 +352,17 @@
         'UPDATE ' . DB_NAME . '.tbl_appointments ap
         SET ap.ACTIVE = 0, ap.ISCANCEL = 1 
         WHERE APPOINTMENT_ID = ?'
-    )
+    );
+
+    define(
+        'query_Update_TemporaryTimeSetActive',
+        'UPDATE ' . DB_NAME . '.tbl_temporarybooked temp 
+        SET temp.ACTIVE = 1 
+        WHERE temp.ACTIVE = 0 
+        AND temp.DAY_ID = ? 
+        AND temp.TIME_ID = ? 
+        AND temp.LOCATION_ID = ?
+        AND temp.MACHINE_ID = ?'
+    );
 
 ?>  

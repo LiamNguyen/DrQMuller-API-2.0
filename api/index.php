@@ -1014,6 +1014,69 @@ $app->put('/appointment/validate', function ($request, $response) {
 });
 
 /* *
+ * URL: http://210.211.109.180/drmuller/api/time/book
+ * Parameters: none
+ * Request body:
+ * {
+      "locationId": "1",
+      "time": [
+        {
+            "dayId": "1",
+            "timeId": "48",
+            "machineId": "1"
+        },
+        {
+            "dayId": "1",
+            "timeId": "8",
+            "machineId": "1"
+        }
+      ]
+ * }
+ * Authorization: Session Token
+ * Method: PUT
+ * */
+
+$app->post('/time/book', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'BookingTransaction');
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResultForTimeData = $validate->verifyRequiredFieldsForTimeData($data, 'BookingTransaction');
+
+    if ($requiredFieldsValidityResultForTimeData['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForTimeData['response']);
+    }
+
+    $db = new DbOperation();
+    $bookTime['BookingTransaction'] = array();
+    $result = array();
+
+    $bookTimeResult = $db->bookTime($data);
+
+    if ($bookTimeResult['existed']) {
+        $result['existence'] = '1';
+        $statusCode = 409;
+    } else if ($bookTimeResult['error']) {
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    } else if ($bookTimeResult['success']) {
+        $result['existence'] = '0';
+        $statusCode = 200;
+    } else {
+        $statusCode = 501;
+    }
+
+    array_push($bookTime['BookingTransaction'], $result);
+
+    return responseBuilder($statusCode, $response, $bookTime);
+});
+
+/* *
  * URL: http://210.211.109.180/drmuller/api/time/release
  * Parameters: none
  * Request body:
@@ -1043,8 +1106,15 @@ $app->put('/time/release', function ($request, $response) {
         return responseBuilder(401, $response, $validityResult['response']);
     }
 
-    $db = new DbOperation();
     $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResultForTimeData = $validate->verifyRequiredFieldsForTimeData($data, 'Update_ReleaseTime');
+
+    if ($requiredFieldsValidityResultForTimeData['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForTimeData['response']);
+    }
+
+    $db = new DbOperation();
     $updateReleaseTime['Update_ReleaseTime'] = array();
     $result = array();
 

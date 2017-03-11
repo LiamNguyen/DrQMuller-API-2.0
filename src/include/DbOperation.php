@@ -412,6 +412,66 @@ class DbOperation
 
     }
 
+    //Method to book time
+    public function bookTime($data) {
+        $existedResponse = array('existed' => true, 'error' => false, 'success' => false);
+        $errorResponse = array('existed' => false, 'error' => true, 'success' => false);
+        $successResponse = array('existed' => false, 'error' => false, 'success' => true);
+
+        $this->con->autocommit(false);
+
+        if ($this->timeExisted($data)) {
+            $this->con->rollback();
+            $this->con->autocommit(true);
+
+            return $existedResponse;
+        }
+
+        $temporaryTimeResult = $this->temporaryTimeExisted($data);
+
+        if (!$temporaryTimeResult['success']) {
+            $this->con->rollback();
+            $this->con->autocommit(true);
+
+            return $errorResponse;
+        }
+
+        if ($temporaryTimeResult['existed']) {
+            $setActiveTemporaryTimeResult = $this->setActiveTemporaryTime($data);
+
+            if (!$setActiveTemporaryTimeResult['success']) {
+                $this->con->rollback();
+                $this->con->autocommit(true);
+
+                return $errorResponse;
+            }
+
+            if ($setActiveTemporaryTimeResult['existed']) {
+                $this->con->rollback();
+                $this->con->autocommit(true);
+
+                return $existedResponse;
+            } else {
+                $this->con->commit();
+
+                return $successResponse;
+            }
+        } else {
+            $insertNewTemporaryTimeSuccess = $this->insertNewTemporaryTime($data);
+
+            if ($insertNewTemporaryTimeSuccess) {
+                $this->con->commit();
+
+                return $successResponse;
+            } else {
+                $this->con->rollback();
+                $this->con->autocommit(true);
+
+                return $errorResponse;
+            }
+        }
+    }
+
     //Method to release time
     public function releaseTime($data) {
 
@@ -443,6 +503,84 @@ class DbOperation
         }
 
         return false;
+    }
+
+    //Method to check if temporary time has existed already
+    private function temporaryTimeExisted($data) {
+        $convertedData = $this->getTimeDataArray($data);
+
+        $sql = query_Select_TemporarySelectedTime;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $convertedData['dayId'], $convertedData['timeId'], $convertedData['locationId'], $convertedData['machineId']);
+        $result = $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        if ($result == 1) {
+            $success = true;
+        } else {
+            $success = false;
+        }
+
+        return array('success' => $success, 'existed' => $num_rows > 0);
+    }
+
+    //Method to set active temporary time
+    private function setActiveTemporaryTime($data) {
+        $convertedData = $this->getTimeDataArray($data);
+
+        $sql = query_Update_TemporaryTimeSetActive;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $convertedData['dayId'], $convertedData['timeId'], $convertedData['locationId'], $convertedData['machineId']);
+        $result = $stmt->execute();
+        $stmt->store_result();
+        $affectedRow = $stmt->affected_rows;
+        $stmt->close();
+
+        if ($result == 1) {
+            $success = true;
+        } else {
+            $success = false;
+        }
+
+        return array('success' => $success, 'existed' => $affectedRow < 0);
+    }
+
+    //Method to insert new temporary time
+    private function insertNewTemporaryTime($data) {
+        $convertedData = $this->getTimeDataArray($data);
+
+        $sql = query_Insert_NewTemporaryTime;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ssss', $convertedData['dayId'], $convertedData['timeId'], $convertedData['locationId'], $convertedData['machineId']);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    //Method to get locationId, dayId, timeId, machineId from data
+    private function getTimeDataArray($data) {
+        $locationId = $data->locationId;
+        $time = $data->time;
+
+        foreach ($time as $value) {
+            $timeObj = (object) $value;
+
+            $dayId = $timeObj->dayId;
+            $timeId = $timeObj->timeId;
+            $machineId = $timeObj->machineId;
+
+            return array(
+                'locationId' => $locationId,
+                'dayId' => $dayId,
+                'timeId' => $timeId,
+                'machineId' => $machineId
+            );
+        }
+
+        return array();
     }
 
     //Method to build a where clause from array of object to release time
