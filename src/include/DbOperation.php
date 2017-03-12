@@ -153,16 +153,15 @@ class DbOperation
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $customerId);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $resultArray = $result->fetch_assoc();
+        $resultArray = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-        
-        $jwt = $this->createJwt($result);
-        $resultArray['JWT'] = $jwt;
 
         if (empty($resultArray['CUSTOMER_ID'])) {
             return array();
         } else {
+            $jwt = $this->createJwt($resultArray);
+            $resultArray['JWT'] = $jwt;
+
             return $resultArray;
         }
 
@@ -906,11 +905,6 @@ class DbOperation
 
     //Method to get user jwt
     private function createJwt($result) {
-        if (mysqli_num_rows($result) <= 0) {
-            return '';
-        }
-
-        $row = mysqli_fetch_assoc($result);
         $tokenId    = base64_encode(mcrypt_create_iv(32));
         $issuedAt   = time();
         $notBefore  = $issuedAt + 10;             //Adding 10 seconds
@@ -927,16 +921,16 @@ class DbOperation
             'nbf'  => $notBefore,        // Not before
             'exp'  => $expire,           // Expire
             'data' => [                  // Data related to the signer user
-                'userId'   => $row['CUSTOMER_ID'], // userid from the users table
-                'userName' => $row['CUSTOMER_NAME'], // User name
-                'userDob'  => $row['DOB'],
-                'userGender' => $row['GENDER'],
-                'userPhone'=> $row['PHONE'],
-                'userAddress' => $row['ADDRESS'],
-                'userEmail' => $row['EMAIL'],
-                'step' => $row['UISAVEDSTEP'],
-                'active' => $row['ACTIVE'],
-                'sessionToken' => $row['SESSIONTOKEN']
+                'userId'   => $result['CUSTOMER_ID'], // userid from the users table
+                'userName' => $result['CUSTOMER_NAME'], // User name
+                'userDob'  => $result['DOB'],
+                'userGender' => $result['GENDER'],
+                'userPhone'=> $result['PHONE'],
+                'userAddress' => $result['ADDRESS'],
+                'userEmail' => $result['EMAIL'],
+                'step' => $result['UISAVEDSTEP'],
+                'active' => $result['ACTIVE'],
+                'sessionToken' => $result['SESSIONTOKEN']
             ]
         ];
         $secretKey = 'drmuller';
