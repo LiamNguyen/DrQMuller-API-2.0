@@ -2,7 +2,7 @@
 
 class ValidationRules {
 
-    private $usernameRegEx = '/^[A-Za-z0-9]{8,25}$/';
+    private $usernameRegEx = '/^[A-Za-z0-9\-\_]{8,25}$/';
     private $passwordRegEx = '/^[A-Za-z0-9]{8,30}$/';
     private $customerNameRegEx = '/^[A-Za-zÀÁÂÃÈÉÊÌÍÒ
     ÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀ
