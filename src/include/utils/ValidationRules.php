@@ -91,13 +91,13 @@ class ValidationRules {
 
         if (!$usernamePatternCheckResult['match'] || !$passwordPatternCheckResult['match']) {
             $result['status'] = '0';
-            $result['errorCode'] = pattern_fail_code;
 
             if (!empty($usernamePatternCheckResult['field'])) {
                 $result['error'] = $usernamePatternCheckResult['field'] . pattern_fail_message;
             } else if (!empty($passwordPatternCheckResult['field'])) {
                 $result['error'] = $passwordPatternCheckResult['field'] . pattern_fail_message;
             }
+            $result['errorCode'] = pattern_fail_code;
 
             array_push($response[$requestName], $result);
 
