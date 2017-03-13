@@ -219,8 +219,8 @@
     define(
         'query_Insert_NewCustomer', 
         'INSERT INTO ' . DB_NAME . '.tbl_customers
-        (LOGIN_ID, PASSWORD, SALT)
-        VALUES(?, ?, ?)'
+        (CUSTOMER_ID, LOGIN_ID, PASSWORD, SALT)
+        VALUES(?, ?, ?, ?)'
     );
 
     define(

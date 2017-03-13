@@ -209,8 +209,18 @@ class DbOperation
         if ($this->isCustomerExist($username)) {
             return 2;
         }
+
+        $this->con->autocommit(false);
+
         $registerResult = $this->insertNewCustomer($username, $password);
-        $this->storeSessionToken($username, $password);
+        $storeTokenSuccess = $this->storeSessionToken($username, $password);
+
+        if (!empty($registerResult) || $storeTokenSuccess) {
+            $this->con->commit();
+        } else {
+            $this->con->rollback();
+            $this->con->autocommit(true);
+        }
         return $registerResult;
     }
 
@@ -781,19 +791,20 @@ class DbOperation
         $saltAndPassword = $this->saltEncode($password);
         $salt = $saltAndPassword['salt'];
         $encodedPassword = $saltAndPassword['password'];
+        $customerId = $this->getGUID();
 
         $sql = query_Insert_NewCustomer;
         $stmt = $this->con->prepare($sql);
-        $stmt->bind_param('sss', $username, $encodedPassword, $salt);
+        $stmt->bind_param('ssss', $customerId, $username, $encodedPassword, $salt);
         $result = $stmt->execute();
         $stmt->close();
         
         if ($result) {
             //Register success: 0 -> No error
-            return 0;
+            return $customerId;
         } else {
             //Register failed: 1 -> There is error
-            return 1;
+            return "";
         }
     }
 
@@ -888,8 +899,15 @@ class DbOperation
         $sql = query_Store_SessionToken;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ss', $customerId, $token);
-        $stmt->execute();
+        $result = $stmt->execute();
         $stmt->close();
+
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to update sessionToken
@@ -899,8 +917,14 @@ class DbOperation
         $sql = query_Update_SessionToken;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('sss', $token, $currentDateTime, $customerId);
-        $stmt->execute();
+        $result = $stmt->execute();
         $stmt->close();
+
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //Method to get user jwt
