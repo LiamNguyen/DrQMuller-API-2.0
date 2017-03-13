@@ -341,22 +341,22 @@ $app->post('/user/register', function ($request, $response) {
 
     $registerResult = $db->customerRegister($username, $password);
 
-    if ($registerResult == 0) {
-        $result['status'] = '1';
+    if ($registerResult == 2) {
+        $result['error'] = customer_existed_error_message;
+        $result['errorCode'] = customer_existed_error_code;
+        $statusCode = 409;
+
+    } else if (!empty($registerResult)) {
+        $customerInformation = $db->getCustomerByCustomerId($registerResult);
+        $result = parseCustomerInformationToResponse($result, $customerInformation);
         $result['message'] = register_success_message;
         $statusCode = 201;
 
-    } else if ($registerResult == 1) {
-        $result['status'] = '0';
+    } else {
         $result['error'] = internal_error_message;
         $result['errorCode'] = internal_error_code;
         $statusCode = 501;
 
-    } else if ($registerResult == 2) {
-        $result['status'] = '2';
-        $result['error'] = customer_existed_error_message;
-        $result['errorCode'] = customer_existed_error_code;
-        $statusCode = 409;
     }
 
     array_push($customerRegister['Insert_NewCustomer'], $result);
