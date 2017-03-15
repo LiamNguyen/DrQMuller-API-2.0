@@ -1058,14 +1058,14 @@ $app->post('/time/book', function ($request, $response) {
     $bookTimeResult = $db->bookTime($data);
 
     if ($bookTimeResult['existed']) {
-        $result['existence'] = '1';
+        $result['existed'] = true;
         $statusCode = 409;
     } else if ($bookTimeResult['error']) {
         $result['error'] = internal_error_message;
         $result['errorCode'] = internal_error_code;
         $statusCode = 501;
     } else if ($bookTimeResult['success']) {
-        $result['existence'] = '0';
+        $result['existed'] = false;
         $statusCode = 200;
     } else {
         $statusCode = 501;
