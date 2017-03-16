@@ -350,7 +350,7 @@
     define(
         'query_Update_CancelAppointment',
         'UPDATE ' . DB_NAME . '.tbl_appointments ap
-        SET ap.ACTIVE = 0, ap.ISCANCEL = 1 
+        SET ap.ACTIVE = 0, ap.ISCANCELLED = 1 
         WHERE APPOINTMENT_ID = ?'
     );
 

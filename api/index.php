@@ -772,7 +772,7 @@ $app->put('/user/passwordreset', function($request, $response) {
         "startDate": "2016/12/02",
         "expiredDate": "2016/12/30",
         "typeId": "1",
-        "userId": "1",
+        "userId": "87C5174E-A5CC-56F0-AE40-8E76CDFB0872",
         "voucherId": "1",
         "verificationCode": "DASFASDF",
         "locationId": "1",
@@ -877,8 +877,8 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
  * Parameters: appointmentId
  * Request body:
  * {
-        "userId": "2",
-        "appointmentId": "20"
+        "userId": "AA4DDF37-8218-24BA-4515-7177298740AE",
+        "appointmentId": "87C5174E-A5CC-56F0-AE40-8E76CDFB0872"
  * }
  * Authorization: Session Token
  * Method: PUT
@@ -929,8 +929,8 @@ $app->put('/appointment/confirm', function ($request, $response) {
  * Parameters: appointmentId
  *  * Request body:
  * {
-        "userId": "2",
-        "appointmentId": "20"
+        "userId": "87C5174E-A5CC-56F0-AE40-8E76CDFB0872",
+        "appointmentId": "AA4DDF37-8218-24BA-4515-7177298740AE"
  * }
  * Authorization: Session Token
  * Method: PUT
