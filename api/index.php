@@ -827,11 +827,12 @@ $app->post('/appointment/create', function ($request, $response) {
         return responseBuilder($statusCode, $response, $createAppointment);
     }
 
-    $createAppointmentSuccess = $db->createAppointment($data);
+    $appointmentId = $db->createAppointment($data);
 
-    if ($createAppointmentSuccess) {
+    if (!empty($appointmentId)) {
         $result['status'] = '1';
         $result['message'] = appointment_create_success_message;
+        $result['appointmentId'] = $appointmentId;
         $statusCode = 200;
     } else {
         $result['status'] = '0';

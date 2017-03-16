@@ -398,12 +398,12 @@ class DbOperation
             $this->con->commit();
             $this->con->close();
 
-            return true;
+            return $appointmentId;
         } else {
             $this->con->rollback();
             $this->con->autocommit(true);
 
-            return false;
+            return "";
         }
     }
 
