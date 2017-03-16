@@ -816,17 +816,6 @@ $app->post('/appointment/create', function ($request, $response) {
     $createAppointment['Insert_NewAppointment'] = array();
     $result = array();
 
-    if ($db->timeExisted($data)) {
-        $result['status'] = '0';
-        $result['error'] = time_existed_message;
-        $result['errorCode'] = time_existed_code;
-        $statusCode = 400;
-
-        array_push($createAppointment['Insert_NewAppointment'], $result);
-
-        return responseBuilder($statusCode, $response, $createAppointment);
-    }
-
     $appointmentId = $db->createAppointment($data);
 
     if (!empty($appointmentId)) {
