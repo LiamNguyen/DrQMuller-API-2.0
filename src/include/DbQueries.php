@@ -167,7 +167,7 @@
     define(
         'query_Select_CustomerId_FromCustomerIdAndAppointmentId',
         'SELECT ap.CUSTOMER_ID 
-        FROM icaredb.tbl_appointments ap
+        FROM ' . DB_NAME . '.tbl_appointments ap
         WHERE ap.CUSTOMER_ID = ?
         AND ap.APPOINTMENT_ID = ?
         AND ap.ACTIVE = 1'

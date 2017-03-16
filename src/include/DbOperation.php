@@ -215,13 +215,16 @@ class DbOperation
         $registerResult = $this->insertNewCustomer($username, $password);
         $storeTokenSuccess = $this->storeSessionToken($username, $password);
 
-        if (!empty($registerResult) || $storeTokenSuccess) {
+        if (!empty($registerResult) && $storeTokenSuccess) {
             $this->con->commit();
+
+            return $registerResult;
         } else {
             $this->con->rollback();
             $this->con->autocommit(true);
+
+            return "";
         }
-        return $registerResult;
     }
 
     //Method to update basic information of user 
@@ -799,7 +802,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
         
-        if ($result) {
+        if ($result == 1) {
             //Register success: 0 -> No error
             return $customerId;
         } else {
@@ -825,7 +828,7 @@ class DbOperation
         $result = $stmt->execute();
         $stmt->close();
 
-        if ($result) {
+        if ($result == 1) {
             return $appointmentId;
         } else {
             return '';
@@ -894,8 +897,12 @@ class DbOperation
     //Method to store sessionToken to database
     private function storeSessionToken($username, $password) {
         $customerId = $this->customerLogin($username, $password);
-        $token = $this->getGUID();
 
+        if (empty($customerId)) {
+            return false;
+        }
+
+        $token = $this->getGUID();
         $sql = query_Store_SessionToken;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('ss', $customerId, $token);
