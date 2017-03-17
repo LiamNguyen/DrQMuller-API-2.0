@@ -38,7 +38,7 @@ require __DIR__ . '/../lib/Prs/ResponseInterface.php';
 
 require __DIR__ . '/../lib/Prs/ServerRequestInterface.php';
 
-$app->get('/test', function ($request, $response) {
+$app->get('/test/running', function () {
 	return 'running';
 });
 /* *
