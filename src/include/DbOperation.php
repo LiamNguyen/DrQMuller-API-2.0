@@ -1,10 +1,10 @@
 <?php
 
 require_once dirname(__FILE__) . '/DbQueries.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/BeforeValidException.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/ExpiredException.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/SignatureInvalidException.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/drmuller/lib/Firebase/src/JWT.php';
+include '../.././lib/Firebase/src/BeforeValidException.php';
+include '../.././lib/Firebase/src/ExpiredException.php';
+include '../.././lib/Firebase/src/SignatureInvalidException.php';
+include '../.././lib/Firebase/src/JWT.php';
 use Firebase\JWT\JWT;
 
 class DbOperation
