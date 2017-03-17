@@ -38,6 +38,9 @@ require __DIR__ . '/../lib/Prs/ResponseInterface.php';
 
 require __DIR__ . '/../lib/Prs/ServerRequestInterface.php';
 
+$app->get('/test', function ($request, $response) {
+	return 'running';
+});
 /* *
  * URL: http://210.211.109.180/drmuller/api/time/alltime
  * Parameters: none
@@ -268,8 +271,8 @@ $app->get('/datasource/vouchers', function ($request, $response) {
  * Parameters: none
  * Request body:
  * {
-	"username": "username",
-	"password": "password"
+    "username": "username",
+    "password": "password"
  * }
  * Authorization: none
  * Method: POST
@@ -315,8 +318,8 @@ $app->post('/user/login', function ($request, $response) {
  * Parameters: none
  * Request body:
  *{
-	"username": "username",
-	"password": "password"
+    "username": "username",
+    "password": "password"
  * }
  * Authorization: none
  * Method: POST
@@ -1176,4 +1179,5 @@ function responseBuilder($status_code, $response, $responseObj) {
                     ->write(json_encode($responseObj));
 }
 
+// Run app
 $app->run();
