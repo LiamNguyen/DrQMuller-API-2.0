@@ -374,9 +374,9 @@ $app->post('/user/register', function ($request, $response) {
       "userAddress": "Test"
  * }
  * Authorization: Session Token to be matched with userId
- * Method: PUT
+ * Method: post
  * */
-$app->put('/user/basicinformation', function ($request, $response) {
+$app->post('/user/basicinformation', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_BasicInfo');
     if (!$validityResult['valid']) {
@@ -431,9 +431,9 @@ $app->put('/user/basicinformation', function ($request, $response) {
       "userGender": "Female"
  * }
  * Authorization: Session Token to be matched with userId
- * Method: PUT
+ * Method: post
  * */
-$app->put('/user/necessaryinformation', function ($request, $response) {
+$app->post('/user/necessaryinformation', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_NecessaryInfo');
     if (!$validityResult['valid']) {
@@ -488,9 +488,9 @@ $app->put('/user/necessaryinformation', function ($request, $response) {
       "userPhone": "+138(04)-494498238"
  * }
  * Authorization: Session Token to be matched with userId
- * Method: PUT
+ * Method: post
  * */
-$app->put('/user/importantinformation', function ($request, $response) {
+$app->post('/user/importantinformation', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ImportantInfo');
     if (!$validityResult['valid']) {
@@ -549,9 +549,9 @@ $app->put('/user/importantinformation', function ($request, $response) {
       "userPhone": "+138(04)-494498238"
  * }
  * Authorization: Session Token to be matched with userId
- * Method: PUT
+ * Method: post
  * */
-$app->put('/user', function ($request, $response) {
+$app->post('/user', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_CustomerInformation');
     if (!$validityResult['valid']) {
@@ -619,10 +619,10 @@ $app->put('/user', function ($request, $response) {
       "userEmail": "test@test.com"
  * }
  * Authorization: Session Token to be matched with userId
- * Method: PUT
+ * Method: post
  * */
 
-$app->put('/user/email', function ($request, $response) {
+$app->post('/user/email', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_CustomerEmail');
     if (!$validityResult['valid']) {
@@ -668,10 +668,10 @@ $app->put('/user/email', function ($request, $response) {
  * URL: http://210.211.109.180/drmuller/api/user/confirm/:customerid
  * Parameters: customerId
  * Authorization: Session Token
- * Method: PUT
+ * Method: post
  * */
 
-$app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
+$app->post('/user/confirm/{customerId}', function ($request, $response, $args) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmCustomer');
     if (!$validityResult['valid']) {
@@ -720,10 +720,10 @@ $app->put('/user/confirm/{customerId}', function ($request, $response, $args) {
         "password": "pnguyen3"
  * }
  * Authorization: Session Token to be matched with username
- * Method: PUT
+ * Method: post
  * */
 
-$app->put('/user/passwordreset', function($request, $response) {
+$app->post('/user/passwordreset', function($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ResetPassword');
     if (!$validityResult['valid']) {
@@ -881,9 +881,9 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
         "appointmentId": "87C5174E-A5CC-56F0-AE40-8E76CDFB0872"
  * }
  * Authorization: Session Token
- * Method: PUT
+ * Method: post
  * */
-$app->put('/appointment/confirm', function ($request, $response) {
+$app->post('/appointment/confirm', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ConfirmAppointment');
     if (!$validityResult['valid']) {
@@ -933,9 +933,9 @@ $app->put('/appointment/confirm', function ($request, $response) {
         "appointmentId": "AA4DDF37-8218-24BA-4515-7177298740AE"
  * }
  * Authorization: Session Token
- * Method: PUT
+ * Method: post
  * */
-$app->put('/appointment/cancel', function ($request, $response) {
+$app->post('/appointment/cancel', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_CancelAppointment');
     if (!$validityResult['valid']) {
@@ -979,10 +979,10 @@ $app->put('/appointment/cancel', function ($request, $response) {
  * URL: http://210.211.109.180/drmuller/api/appointment/validate
  * Parameters: none
  * Authorization: none
- * Method: PUT
+ * Method: post
  * */
 
-$app->put('/appointment/validate', function ($request, $response) {
+$app->post('/appointment/validate', function ($request, $response) {
     $db = new DbOperation();
     $updateValidateAppointments['Update_ValidateAppointments'] = array();
     $result = array();
@@ -1023,7 +1023,7 @@ $app->put('/appointment/validate', function ($request, $response) {
       ]
  * }
  * Authorization: Session Token
- * Method: PUT
+ * Method: post
  * */
 
 $app->post('/time/book', function ($request, $response) {
@@ -1086,10 +1086,10 @@ $app->post('/time/book', function ($request, $response) {
       ]
  * }
  * Authorization: Session Token
- * Method: PUT
+ * Method: post
  * */
 
-$app->put('/time/release', function ($request, $response) {
+$app->post('/time/release', function ($request, $response) {
     $validate = new ValidationRules();
     $validityResult = $validate->isValidCustomer($request, 'Update_ReleaseTime');
     if (!$validityResult['valid']) {
