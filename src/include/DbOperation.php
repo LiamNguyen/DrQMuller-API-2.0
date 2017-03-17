@@ -1,10 +1,10 @@
 <?php
 
 require_once dirname(__FILE__) . '/DbQueries.php';
-include '../.././lib/Firebase/src/BeforeValidException.php';
-include '../.././lib/Firebase/src/ExpiredException.php';
-include '../.././lib/Firebase/src/SignatureInvalidException.php';
-include '../.././lib/Firebase/src/JWT.php';
+require dirname(__FILE__) . '/../.././lib/Firebase/src/BeforeValidException.php';
+require dirname(__FILE__) . '/../.././lib/Firebase/src/ExpiredException.php';
+require dirname(__FILE__) . '/../.././lib/Firebase/src/SignatureInvalidException.php';
+require dirname(__FILE__) . '/../.././lib/Firebase/src/JWT.php';
 use Firebase\JWT\JWT;
 
 class DbOperation
