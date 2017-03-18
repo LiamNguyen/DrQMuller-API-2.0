@@ -105,10 +105,12 @@ class EmailTemplate
                     }
             
                     .subject {
+                        width: 50%;
                         float: left;
                     }
             
                     .value {
+                        width: 50%;
                         float: right;
                     }
             
