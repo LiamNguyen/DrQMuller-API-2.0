@@ -28,8 +28,8 @@ class EmailTemplate
         foreach ($timeArray as $item) {
             $timeObj = (object) $item;
             $time .= '
-                <div class="row" style="align-content: center">
-                    <div class="center">
+                <div class="row" style="font-size: 20px">
+                    <div>
                 '
                 .
                 $timeObj->DAY . ' - ' . $timeObj->TIME . ' ' . $timeObj->MACHINE_NAME
@@ -97,11 +97,6 @@ class EmailTemplate
             
                     .row {
                         height: 50px;
-                    }
-                    
-                    .row .center {
-                        display: table;
-                        margin: 0 auto;
                     }
             
                     .subject {
