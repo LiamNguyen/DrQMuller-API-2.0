@@ -599,7 +599,7 @@ class DbOperation
     }
 
     //Method to send email notifying new appointment
-    private function notifyBooking($appointmentId) {
+    function notifyBooking($appointmentId) {
         $appointmentInfo = $this->getAppointment($appointmentId);
         $appointmentSchedule = $this->getAppointmentSchedule($appointmentId);
         $appointmentInfo['timeArray'] = $appointmentSchedule;

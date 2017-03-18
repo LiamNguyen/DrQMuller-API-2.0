@@ -876,7 +876,9 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
 });
 
 $app->get('/notifybooking/send/{appointmentId}', function ($request, $response, $args) {
-    $emailSentSuccess= $this->notifyBooking($args['appointmentId']);
+    $db = new DbOperation();
+
+    $emailSentSuccess= $db->notifyBooking($args['appointmentId']);
     $notifyBooking['SendMail_NotifyBooking'] = array();
 
     if ($emailSentSuccess) {
