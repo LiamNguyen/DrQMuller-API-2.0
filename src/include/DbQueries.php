@@ -189,6 +189,7 @@
             , ap.EXPIRED_DATE
             , ty.TYPE
             , lo.LOCATION_NAME
+            , ap.VERIFICATION_CODE
             , cu.CUSTOMER_NAME
             , ap.CREATEDAT
             , ap.ISCONFIRMED
@@ -210,6 +211,18 @@
         AND TIME_ID = ?
         AND LOCATION_ID = ?
         AND MACHINE_ID = ?'
+    );
+
+    define(
+        'query_Select_AppointmentScheduleForEmail',
+        'SELECT wd.DAY, ti.TIME, ma.MACHINE_NAME
+        FROM ' . DB_NAME . '.tbl_appointmentschedule aps
+        INNER JOIN ' . DB_NAME . '.tbl_appointments ap ON aps.APPOINTMENT_ID = ap.APPOINTMENT_ID
+        INNER JOIN ' . DB_NAME . '.tbl_weekdays wd ON aps.DAY_Id = wd.DAY_Id
+        INNER JOIN ' . DB_NAME . '.tbl_time ti ON aps.TIME_ID = ti.TIME_ID
+        INNER JOIN ' . DB_NAME . '.tbl_machines ma ON aps.MACHINE_ID = ma.MACHINE_ID
+        WHERE aps.APPOINTMENT_ID = ? 
+        AND ap.ACTIVE = 1'
     );
 
 /* *

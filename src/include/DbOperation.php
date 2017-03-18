@@ -1,6 +1,10 @@
 <?php
 
 require_once dirname(__FILE__) . '/DbQueries.php';
+
+require dirname(__FILE__) . '/MailSender/templates/Template_NotifyBooking.php';
+require dirname(__FILE__) . '/MailSender/NotifyBookingMailConfig.php';
+
 require dirname(__FILE__) . '/../.././lib/Firebase/src/BeforeValidException.php';
 require dirname(__FILE__) . '/../.././lib/Firebase/src/ExpiredException.php';
 require dirname(__FILE__) . '/../.././lib/Firebase/src/SignatureInvalidException.php';
@@ -223,7 +227,7 @@ class DbOperation
             $this->con->rollback();
             $this->con->autocommit(true);
 
-            return "";
+            return '';
         }
     }
 
@@ -399,6 +403,15 @@ class DbOperation
 
         if ($insertBookingScheduleSuccess && $releaseTimeSuccess) {
             $this->con->commit();
+
+            $emailSentSuccess= $this->notifyBooking($appointmentId);
+
+            if ($emailSentSuccess) {
+                echo '<br>Email: sent';
+            } else {
+                echo '<br>Email: not sent';
+            }
+
             $this->con->close();
 
             return $appointmentId;
@@ -406,7 +419,7 @@ class DbOperation
             $this->con->rollback();
             $this->con->autocommit(true);
 
-            return "";
+            return '';
         }
     }
 
@@ -444,6 +457,28 @@ class DbOperation
 
     //Method to validate appointments
     public function validateAppointments() {
+//        $array = $this->getAppointmentSchedule('455B5066-B054-05A1-0517-5AF7CA894998');
+//        $time = '';
+//
+//        echo '\n' . $array;
+//
+//        foreach ($array as $item) {
+//            $timeObj = (object) $item;
+//            $time .= '
+//                <div class="row">
+//                    <span class="subject">
+//                '
+//                .
+//                $timeObj->DAY . ' - ' . $timeObj->TIME . ' ' . $timeObj->MACHINE_NAME
+//                .
+//                '
+//                    </span>
+//                </div>
+//            ';
+//        }
+//
+//        echo '\n' . $time;
+
         $sql = query_Update_ValidateAppointments;
         $stmt = $this->con->prepare($sql);
         $result = $stmt->execute();
@@ -570,6 +605,44 @@ class DbOperation
         }
 
         return false;
+    }
+
+    //Method to send email notifying new appointment
+    private function notifyBooking($appointmentId) {
+        $appointmentInfo = $this->getAppointment($appointmentId);
+        $appointmentSchedule = $this->getAppointmentSchedule($appointmentId);
+        $appointmentInfo['timeArray'] = $appointmentSchedule;
+
+        $emailBody = \templates\email\EmailTemplate::getNotifyBookingTemplate($appointmentInfo);
+
+        $mailSender = new NotifyBookingMailConfig();
+        $mailSender = $mailSender->getMailSender();
+
+        $mailSender->Body = $emailBody;
+        while (!$mailSender->send()) {
+            echo 'retrying';
+        }
+
+        return true;
+    }
+
+    //Method to get appointment schedule for email template, ex: dayId, timeId, machineId
+    private function getAppointmentSchedule($appointmentId) {
+        $sql = query_Select_AppointmentScheduleForEmail;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $appointmentId);
+        $result = $stmt->execute();
+        $resultArray = $stmt->get_result();
+        $array = array();
+
+        if ($result == 1) {
+            while($row = $resultArray->fetch_object()) {
+                array_push($array, $row);
+            }
+            return $array;
+        } else {
+            return '';
+        }
     }
 
     //Method to check if temporary time has existed already
@@ -807,7 +880,7 @@ class DbOperation
             return $customerId;
         } else {
             //Register failed: 1 -> There is error
-            return "";
+            return '';
         }
     }
 

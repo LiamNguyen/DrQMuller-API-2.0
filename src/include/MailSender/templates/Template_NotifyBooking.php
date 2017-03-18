@@ -11,31 +11,31 @@ namespace templates\email;
 class EmailTemplate
 {
     static function getNotifyBookingTemplate($data) {
-        $customerId = $data->userId;
-        $customerName = $data->userName;
-        $createAt = $data->createdAt;
-        $displayId = $data->displayId;
-        $location = $data->location;
-        $voucher = $data->voucher;
-        $type = $data->type;
-        $startDate = $data->startDate;
-        $expiredDate = $data->expiredDate;
-        $exactDate = $data->exactDate;
-        $verificationCode = $data->verificationCode;
+        $data = (object) $data;
+
+        $customerName = $data->CUSTOMER_NAME;
+        $createAt = $data->CREATEDAT;
+        $displayId = $data->DISPLAY_ID;
+        $location = $data->LOCATION_NAME;
+        $voucher = $data->VOUCHER;
+        $type = $data->TYPE;
+        $startDate = $data->START_DATE;
+        $expiredDate = $data->EXPIRED_DATE;
+        $verificationCode = $data->VERIFICATION_CODE;
         $timeArray = $data->timeArray;
         $time = '';
 
         foreach ($timeArray as $item) {
             $timeObj = (object) $item;
             $time .= '
-                <div class="row">
-                    <span class="subject">
+                <div class="row" style="align-content: center">
+                    <div class="center">
                 '
                 .
-                $timeObj->day . '-' . $timeObj->time . ' ' . $timeObj->machine
+                $timeObj->DAY . ' - ' . $timeObj->TIME . ' ' . $timeObj->MACHINE_NAME
                 .
                 '
-                    </span>
+                    </div>
                 </div>
             ';
         }
@@ -47,7 +47,7 @@ class EmailTemplate
                         Ngày thực hiện 
                     </span>
                     <span class="value">
-                        ' . $exactDate . '
+                        ' . $expiredDate . '
                     </span>
                 </div> 
                 '
@@ -95,7 +95,14 @@ class EmailTemplate
                         box-shadow: 2px 2px 2px 2px gray;
                     }
             
-                    .row {}
+                    .row {
+                        height: 50px;
+                    }
+                    
+                    .row .center {
+                        display: table;
+                        margin: 0 auto;
+                    }
             
                     .subject {
                         float: left;
@@ -111,26 +118,18 @@ class EmailTemplate
                 <div class="container">
                     <div class="row">
                         <span class="subject">
-                            Mã khách hàng
+                            <b>Tên khách hàng</b> 
                         </span>
                         <span class="value">
-                            ' . $customerId . '
+                            <b>' . $customerName . '</b>
                         </span>
                     </div>
                     <div class="row">
                         <span class="subject">
-                            Tên khách hàng 
+                            <b>Mã lịch hẹn</b> 
                         </span>
                         <span class="value">
-                            ' . $customerName . '
-                        </span>
-                    </div>
-                    <div class="row">
-                        <span class="subject">
-                            Mã lịch hẹn 
-                        </span>
-                        <span class="value">
-                            ' . $displayId . '
+                            <b>' . $displayId . '</b>
                         </span>
                     </div>
                    <div class="row">
@@ -170,12 +169,12 @@ class EmailTemplate
                     $changingPart
                     .
                     '
-                    <div class="row">
+                    <div class="row" style="color: blue">
                         <span class="subject">
-                            Mã xác nhận 
+                            <b>Mã xác nhận</b> 
                         </span>
-                        <span class="value">
-                            ' . $verificationCode . '
+                        <span class="value" style="font-size: 15px">
+                            <b>' . $verificationCode . '</b>
                         </span>
                     </div>  
                 </div>
