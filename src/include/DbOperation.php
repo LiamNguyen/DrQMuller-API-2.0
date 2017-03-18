@@ -403,15 +403,6 @@ class DbOperation
 
         if ($insertBookingScheduleSuccess && $releaseTimeSuccess) {
             $this->con->commit();
-
-            $emailSentSuccess= $this->notifyBooking($appointmentId);
-
-            if ($emailSentSuccess) {
-                echo '<br>Email: sent';
-            } else {
-                echo '<br>Email: not sent';
-            }
-
             $this->con->close();
 
             return $appointmentId;
@@ -619,9 +610,7 @@ class DbOperation
         $mailSender = $mailSender->getMailSender();
 
         $mailSender->Body = $emailBody;
-        while (!$mailSender->send()) {
-            echo 'retrying';
-        }
+        while (!$mailSender->send()) {}
 
         return true;
     }

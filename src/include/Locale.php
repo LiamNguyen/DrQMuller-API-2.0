@@ -144,6 +144,26 @@
     define(
         'time_existed_code',
         'time-existed'
-    )
+    );
+
+    define(
+        'notify_booking_sent_code',
+        'notify-booking-sent'
+    );
+
+    define(
+        'notify_booking_sent_message',
+        'Email has been sent to notify booking'
+    );
+
+    define(
+        'notify_booking_fail_code',
+        'notify-booking-fail'
+    );
+
+    define(
+        'notify_booking_fail_message',
+        'Fail to send email notifying booking'
+    );
 
 ?>

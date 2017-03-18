@@ -875,6 +875,25 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
     }
 });
 
+$app->get('/notifybooking/send/{appointmentId}', function ($request, $response, $args) {
+    $emailSentSuccess= $this->notifyBooking($args['appointmentId']);
+    $notifyBooking['SendMail_NotifyBooking'] = array();
+
+    if ($emailSentSuccess) {
+        $result['messageCode'] = notify_booking_sent_code;
+        $result['message'] = notify_booking_sent_message;
+        $statusCode = 200;
+    } else {
+        $result['messageCode'] = notify_booking_fail_code;
+        $result['message'] = notify_booking_fail_message;
+        $statusCode = 501;
+    }
+
+    array_push($notifyBooking['SendMail_NotifyBooking'], $result);
+
+    return responseBuilder($statusCode, $response, $notifyBooking);
+});
+
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm
  * Parameters: appointmentId
