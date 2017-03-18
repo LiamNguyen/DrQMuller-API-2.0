@@ -875,10 +875,11 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
     }
 });
 
-$app->get('/notifybooking/send/{appointmentId}', function ($request, $response, $args) {
+$app->post('/notifybooking/send', function ($request, $response) {
+
     $db = new DbOperation();
 
-    $emailSentSuccess= $db->notifyBooking($args['appointmentId']);
+    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
     $notifyBooking['SendMail_NotifyBooking'] = array();
 
     if ($emailSentSuccess) {
