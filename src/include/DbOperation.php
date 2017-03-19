@@ -150,8 +150,8 @@ class DbOperation
 
     //Method to get customer by Id
     public function getCustomerByCustomerId($customerId) {
-        // $token = $this->getGUID();
-        // $this->updateSessionToken($customerId, $token);
+        $token = $this->getGUID();
+        $this->updateSessionToken($customerId, $token);
 
         $sql = query_Select_CustomerInfoByCustomerId;
         $stmt = $this->con->prepare($sql);
@@ -599,7 +599,7 @@ class DbOperation
     }
 
     //Method to send email notifying new appointment
-    function notifyBooking($appointmentId) {
+    public function notifyBooking($appointmentId) {
         $appointmentInfo = $this->getAppointment($appointmentId);
         $appointmentSchedule = $this->getAppointmentSchedule($appointmentId);
         $appointmentInfo['timeArray'] = $appointmentSchedule;
@@ -613,6 +613,106 @@ class DbOperation
         while (!$mailSender->send()) {}
 
         return true;
+    }
+
+    //Method to let customer login
+    public function adminLogin($username, $password) {
+        $decodedPassword = $this->saltDecode($username, $password);
+
+        if (!$this->updateKey($username, $this->getGUID())) {
+            return '';
+        }
+
+        $sql = query_Select_AdminKey;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $username, $decodedPassword);
+        $stmt->execute();
+        $key = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $key['SECRETKEY'];
+    }
+
+    //Method to get latest build number
+    public function getLatestBuild($os) {
+        $sql = query_Select_LatestBuildNumber;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss',$os, $os);
+        $stmt->execute();
+        $build = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $build['BUILD'];
+    }
+
+    //Method to get build number
+    public function buildExisted($data) {
+        $version = $data->version;
+        $build = $data->build;
+        $os = $data->os;
+
+        $sql = query_Select_BuildNumber;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sis',$version, $build, $os);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
+    //Method to store new version
+    public function storeNewVersion($data) {
+        $this->con->autocommit(false);
+
+        if ($this->setInactiveLatestVersion($data) && $this->insertNewVersion($data)) {
+            $this->con->commit();
+
+            return true;
+        } else {
+            $this->con->rollback();
+            $this->con->autocommit(true);
+
+            return false;
+        }
+
+    }
+
+    //Method to insert new release version
+    private function insertNewVersion($data) {
+        $version = $data->version;
+        $build = $data->build;
+        $os = $data->os;
+
+        $sql = query_Insert_NewVersion;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('sis', $version, $build, $os);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    //Method to set latest version to be inactive
+    private function setInactiveLatestVersion($data) {
+        $sql = query_Update_VersionSetInactive;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $data->os, $data->os);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Method to get appointment schedule for email template, ex: dayId, timeId, machineId
@@ -838,6 +938,19 @@ class DbOperation
         return $num_rows > 0;
     }
 
+    //Method to check admin key is valid
+    public function isValidAdmin($key) {
+        $sql = query_Select_AdminId_FromKey;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $key);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_rows = $stmt->num_rows;
+        $stmt->close();
+
+        return $num_rows > 0;
+    }
+
     //Method to check userame existence
     private function isCustomerExist($username) {
         $sql = query_Select_CustomerId_FromUsername;
@@ -986,6 +1099,21 @@ class DbOperation
         $sql = query_Update_SessionToken;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('sss', $token, $currentDateTime, $customerId);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if ($result == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Method to update admin secret key
+    private function updateKey($username, $key) {
+        $sql = query_Update_AdminKey;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('ss', $key, $username);
         $result = $stmt->execute();
         $stmt->close();
 

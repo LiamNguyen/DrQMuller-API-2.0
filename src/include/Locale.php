@@ -166,4 +166,14 @@
         'Fail to send email notifying booking'
     );
 
+    define(
+        'store_version_success_message',
+        'Stored new version successfully'
+    );
+
+    define(
+        'build_existed_error_message',
+        'This version or build has already existed'
+    );
+
 ?>

@@ -41,6 +41,7 @@ require __DIR__ . '/../lib/Prs/ServerRequestInterface.php';
 $app->get('/test/running', function () {
 	return 'running';
 });
+
 /* *
  * URL: http://210.211.109.180/drmuller/api/time/alltime
  * Parameters: none
@@ -1148,6 +1149,138 @@ $app->post('/time/release', function ($request, $response) {
     array_push($updateReleaseTime['Update_ReleaseTime'], $result);
 
     return responseBuilder($statusCode, $response, $updateReleaseTime);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/version/release
+ * Parameters: none
+ * Request body:
+ * {
+      "version": "demoversion",
+      "build": 1111,
+      "os": "ios/android"
+ * }
+ * Authorization: Session Token
+ * Method: post
+ * */
+
+$app->post('/version/release', function ($request, $response) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidAdmin($request);
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $data = (object) $request->getParsedBody();
+
+    $requiredFieldsValidityResultForStoringNewVersion = $validate->verifyRequiredFieldsForStoringNewVersion($data);
+
+    if ($requiredFieldsValidityResultForStoringNewVersion['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResultForStoringNewVersion['response']);
+    }
+
+    $db = new DbOperation();
+    $storeNewVersion['StoreNewVersion'] = array();
+    $result = array();
+
+    $buildExited = $db->buildExisted($data);
+
+    if ($buildExited) {
+        $result['error'] = build_existed_error_message;
+
+        array_push($storeNewVersion['StoreNewVersion'], $result);
+
+        return responseBuilder(400, $response, $storeNewVersion);
+    }
+
+    $storeNewVersionSuccess = $db->storeNewVersion($data);
+
+    if ($storeNewVersionSuccess) {
+        $result['status'] = '1';
+        $result['message'] = store_version_success_message;
+        $statusCode = 200;
+    } else {
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($storeNewVersion['StoreNewVersion'], $result);
+
+    return responseBuilder($statusCode, $response, $storeNewVersion);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/admin/login
+ * Parameters: none
+ * Request body:
+ * {
+    "username": "username",
+    "password": "password"
+ * }
+ * Authorization: none
+ * Method: POST
+ * */
+$app->post('/admin/login', function ($request, $response) {
+
+    $data = (object) $request->getParsedBody();
+
+    $validate = new ValidationRules();
+    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Admin Login');
+    if ($requiredFieldsValidityResult['error']) {
+        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
+    }
+
+    $username = $data->username;
+    $password = $data->password;
+
+    $db = new DbOperation();
+
+    $adminLogin['Admin Login'] = array();
+    $result = array();
+
+    $key = $db->adminLogin($username, $password);
+    if (!empty($key)) {
+        $result['key'] = $key;
+        $statusCode = 200;
+
+    } else {
+        $result['error'] = invalid_username_or_password_message;
+        $result['errorCode'] = invalid_username_or_password_code;
+        $statusCode = 401;
+
+    }
+
+    array_push($adminLogin['Admin Login'], $result);
+
+    return responseBuilder($statusCode, $response, $adminLogin);
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/version/:os
+ * Parameters: none
+ * Authorization: none
+ * Method: GET
+ * */
+
+$app->get('/version/{os}', function($request, $response, $args) {
+    $db  = new DbOperation();
+
+    $buildResponse['Select_LatestBuild'] = array();
+
+    $build = $db->getLatestBuild($args['os']);
+
+    if (!empty($build)) {
+        $result['build'] = $build;
+        $statusCode = 200;
+    } else {
+        $result['error'] = internal_error_message;
+        $result['errorCode'] = internal_error_code;
+        $statusCode = 501;
+    }
+
+    array_push($buildResponse['Select_LatestBuild'], $result);
+    return responseBuilder($statusCode, $response, $buildResponse);
 });
 
 /* *

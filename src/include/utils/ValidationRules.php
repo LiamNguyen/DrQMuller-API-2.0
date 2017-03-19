@@ -21,6 +21,9 @@ class ValidationRules {
     private $dayIdRegEx = '/^[1-7]+$/';
     private $timeIdRegEx = '/^(?:((1|2|3|4|5)?\d)|((6)[0-6]))$/';
     private $machineIdRegEx = '/^(?:1|2)$/';
+    private $versionRegEx = '/^[0-9\.]{1,10}$/';
+    private $buildRegEx = '/^[0-9]{0,3}+$/';
+    private $osRegEx = '/^(?:ios|android)$/';
 
 /* *
 * Type: Helper method
@@ -59,6 +62,37 @@ class ValidationRules {
         array_push($validationResponse[$requestName], $result);
 
         return array('valid' => $isValidTokenResult, 'response' => $validationResponse);
+    }
+
+/* *
+* Type: Helper method
+* Responsibility: Check admin key
+* */
+
+    function isValidAdmin($request) {
+        $key = $request->getHeaderLine('Authorization');
+        $validationResponse['Admin'] = array();
+        $result = array();
+        $db = new DbOperation();
+
+        $isValidAdminResult = $db->isValidAdmin($key);
+
+        if (!empty($key)) {
+            if (!$isValidAdminResult) {
+                $result['status'] = '0';
+                $result['error'] = invalid_token_message;
+                $result['errorCode'] = invalid_token_code;
+            }
+
+        } else {
+            $result['status'] = '0';
+            $result['error'] = token_missing_message;
+            $result['errorCode'] = token_missing_code;
+        }
+
+        array_push($validationResponse['Admin'], $result);
+
+        return array('valid' => $isValidAdminResult, 'response' => $validationResponse);
     }
 
 /* *
@@ -456,6 +490,57 @@ class ValidationRules {
         }
 
         return array('error' => false);
+    }
+
+/* *
+* Type: Helper method
+* Responsibility: Verify compulsory field in request body
+* */
+
+    function verifyRequiredFieldsForStoringNewVersion($data) {
+        $response['StoreNewVersion'] = array();
+        $result = array();
+
+        //** Check if required fields are empty
+        if (empty($data->version) || empty($data->build) || empty($data->os)) {
+            $result['error'] = required_fields_missing_message;
+            $result['errorCode'] = required_fields_missing_code;
+
+            array_push($response['StoreNewVersion'], $result);
+
+            return array('error' => true, 'response' => $response);
+        }
+
+        $dataArray = array(
+            'version' => $data->version,
+            'build' => $data->build,
+            'os' => $data->os
+        );
+
+//** Check if required fields's patterns are match
+        $versionPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['version'], $this->versionRegEx);
+        $buildPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['build'], $this->buildRegEx);
+        $osPatternCheckResult = $this->passedPatternCheck($dataArray, $dataArray['os'], $this->osRegEx);
+
+        if (!$versionPatternCheckResult['match'] || !$buildPatternCheckResult['match'] || !$osPatternCheckResult['match']) {
+            $result['status'] = '0';
+
+            if (!empty($versionPatternCheckResult['field'])) {
+                $result['error'] = $versionPatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($buildPatternCheckResult['field'])) {
+                $result['error'] = $buildPatternCheckResult['field'] . pattern_fail_message;
+            } else if (!empty($osPatternCheckResult['field'])) {
+                $result['error'] = $osPatternCheckResult['field'] . pattern_fail_message;
+            }
+            $result['errorCode'] = pattern_fail_code;
+
+            array_push($response['StoreNewVersion'], $result);
+
+            return array('error' => true, 'response' => $response);
+        }
+
+        return array('error' => false);
+
     }
 
     //Method to check fields pattern if is is matched or not

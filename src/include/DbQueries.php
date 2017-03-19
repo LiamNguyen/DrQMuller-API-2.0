@@ -134,10 +134,25 @@
     );
 
     define(
+        'query_Select_AdminKey',
+        'SELECT ad.SECRETKEY
+            FROM ' . DB_NAME . '.tbl_admins ad 
+            WHERE ad.LOGIN_ID = ? 
+            AND ad.PASSWORD = ? AND ACTIVE = 1'
+    );
+
+    define(
         'query_Select_CustomerId_FromUsername', 
         'SELECT cu.CUSTOMER_ID
         FROM ' . DB_NAME . '.tbl_customers cu 
         WHERE cu.LOGIN_ID = ? AND STATUS = 1'
+    );
+
+    define(
+        'query_Select_AdminId_FromKey',
+        'SELECT ad.ADMIN_ID
+        FROM ' . DB_NAME . '.tbl_admins ad
+        WHERE ad.SECRETKEY = ? AND ACTIVE = 1'
     );
 
     define(
@@ -225,6 +240,29 @@
         AND ap.ACTIVE = 1'
     );
 
+    define(
+        'query_Select_BuildNumber',
+        'SELECT v.BUILD
+        FROM ' . DB_NAME . '.tbl_versions v
+        WHERE (v.VERSION = ? OR v.BUILD = ?) AND v.OS = ?'
+    );
+
+    define(
+        'query_Select_LatestBuildNumber',
+        'SELECT v.BUILD 
+        FROM uat_icaredb.tbl_versions as v
+        Where RELEASEDATE = 
+        (  
+            SELECT MAX(RELEASEDATE)     
+            FROM 
+            (
+                SELECT RELEASEDATE 
+                FROM uat_icaredb.tbl_versions as vn
+                WHERE vn.OS = ?
+            ) as vsn
+        ) AND v.OS = ?'
+    );
+
 /* *
  * INSERT STATEMENTS
  * */
@@ -262,6 +300,13 @@
         'INSERT INTO ' . DB_NAME . '.tbl_temporarybooked 
         (DAY_ID, TIME_ID, LOCATION_ID, MACHINE_ID) 
         VALUES (?, ?, ?, ?)'
+    );
+
+    define(
+        'query_Insert_NewVersion',
+        'INSERT INTO ' . DB_NAME . '.tbl_versions
+        (VERSION, BUILD, OS)
+        VALUES (?, ?, ?)'
     );
 
 /* *
@@ -376,6 +421,33 @@
         AND temp.TIME_ID = ? 
         AND temp.LOCATION_ID = ?
         AND temp.MACHINE_ID = ?'
+    );
+
+    define(
+        'query_Update_VersionSetInactive',
+        'UPDATE ' . DB_NAME . '.tbl_versions 
+        SET ACTIVE = 0 
+        WHERE ID = (
+            SELECT ID 
+            FROM (SELECT * FROM ' . DB_NAME . '.tbl_versions) as v
+            Where RELEASEDATE = 
+            (  
+                select MAX(RELEASEDATE)     
+                FROM 
+                (
+                    SELECT * 
+                    FROM ' . DB_NAME . '.tbl_versions vn
+                    WHERE vn.OS = ? 
+                ) as vsn
+            )
+        ) AND OS = ?'
+    );
+
+    define(
+        'query_Update_AdminKey',
+        'UPDATE ' . DB_NAME . '.tbl_admins ad
+        SET ad.SECRETKEY = ?
+        WHERE ad.LOGIN_ID = ?'
     );
 
 ?>  
