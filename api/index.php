@@ -882,7 +882,7 @@ $app->post('/notifybooking/send', function ($request, $response) {
 
     $notifyBooking['SendMail_NotifyBooking'] = array();
 
-    if ($request->getParam('appointmentId')) {
+    if (empty($request->getParam('appointmentId'))) {
         $result['message'] = appointment_id_empty_message;
         array_push($notifyBooking['SendMail_NotifyBooking'], $result);
 
