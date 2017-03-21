@@ -880,8 +880,16 @@ $app->post('/notifybooking/send', function ($request, $response) {
 
     $db = new DbOperation();
 
-    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
     $notifyBooking['SendMail_NotifyBooking'] = array();
+
+    if ($request->getParam('appointmentId')) {
+        $result['message'] = appointment_id_empty_message;
+        array_push($notifyBooking['SendMail_NotifyBooking'], $result);
+
+        return responseBuilder(501, $response, $notifyBooking);
+    }
+
+    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
 
     if ($emailSentSuccess) {
         $result['messageCode'] = notify_booking_sent_code;

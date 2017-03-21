@@ -176,4 +176,9 @@
         'This version or build has already existed'
     );
 
+    define(
+        'appointment_id_empty_message',
+        'Appointment Id is empty when trying to send notify email'
+    );
+
 ?>
