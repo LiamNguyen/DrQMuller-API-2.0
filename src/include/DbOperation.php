@@ -151,7 +151,9 @@ class DbOperation
     //Method to get customer by Id
     public function getCustomerByCustomerId($customerId) {
         $token = $this->getGUID();
-        $this->updateSessionToken($customerId, $token);
+        if (!$this->updateSessionToken($customerId, $token)) {
+            return array();
+        }
 
         $sql = query_Select_CustomerInfoByCustomerId;
         $stmt = $this->con->prepare($sql);
@@ -221,6 +223,7 @@ class DbOperation
 
         if (!empty($registerResult) && $storeTokenSuccess) {
             $this->con->commit();
+            $this->con->autocommit(true);
 
             return $registerResult;
         } else {
@@ -1200,4 +1203,7 @@ class DbOperation
         }
     }
 
+    static function printPrettify($msg) {
+        echo '<br>' . $msg;
+    }
 }
