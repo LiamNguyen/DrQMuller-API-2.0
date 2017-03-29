@@ -1304,7 +1304,7 @@ function parseCustomerInformationToResponse($resultResponse, $customerInformatio
     $resultResponse['phone'] = $customerInformation['PHONE'];
     $resultResponse['address'] = $customerInformation['ADDRESS'];
     $resultResponse['email'] = $customerInformation['EMAIL'];
-    $resultResponse['sessonToken'] = $customerInformation['SESSIONTOKEN']; 
+    $resultResponse['sessionToken'] = $customerInformation['SESSIONTOKEN'];
     $resultResponse['jwt'] = $customerInformation['JWT'];
 
     return $resultResponse;
