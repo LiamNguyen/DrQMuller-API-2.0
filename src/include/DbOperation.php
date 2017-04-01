@@ -1131,8 +1131,8 @@ class DbOperation
     private function createJwt($result) {
         $tokenId    = base64_encode(mcrypt_create_iv(32));
         $issuedAt   = time();
-        $notBefore  = $issuedAt + 10;             //Adding 10 seconds
-        $expire     = $notBefore + 60;            // Adding 60 seconds
+        //$notBefore  = $issuedAt + 10;             //Adding 10 seconds
+        $expire     = $issuedAt + 60;            // Adding 60 seconds
         $serverName = 'drmuller'; // Retrieve the server name from config file
 
         /*
@@ -1142,7 +1142,7 @@ class DbOperation
             'iat'  => $issuedAt,         // Issued at: time when the token was generated
             'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
             'iss'  => $serverName,       // Issuer
-            'nbf'  => $notBefore,        // Not before
+            //'nbf'  => $notBefore,        // Not before
             'exp'  => $expire,           // Expire
             'data' => [                  // Data related to the signer user
                 'userId'   => $result['CUSTOMER_ID'], // userid from the users table
