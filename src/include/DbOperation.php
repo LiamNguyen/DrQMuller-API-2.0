@@ -1203,7 +1203,8 @@ class DbOperation
         }
     }
 
-    static function printPrettify($msg) {
+    static function
+    Prettify($msg) {
         echo '<br>' . $msg;
     }
 }

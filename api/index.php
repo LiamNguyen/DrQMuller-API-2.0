@@ -827,6 +827,7 @@ $app->post('/appointment/create', function ($request, $response) {
         $result['message'] = appointment_create_success_message;
         $result['appointmentId'] = $appointmentId;
         $statusCode = 200;
+
     } else {
         $result['status'] = '0';
         $result['error'] = internal_error_message;
@@ -876,35 +877,35 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
     }
 });
 
-$app->post('/notifybooking/send', function ($request, $response) {
-
-    $db = new DbOperation();
-
-    $notifyBooking['SendMail_NotifyBooking'] = array();
-
-    if (empty($request->getParam('appointmentId'))) {
-        $result['message'] = appointment_id_empty_message;
-        array_push($notifyBooking['SendMail_NotifyBooking'], $result);
-
-        return responseBuilder(501, $response, $notifyBooking);
-    }
-
-    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
-
-    if ($emailSentSuccess) {
-        $result['messageCode'] = notify_booking_sent_code;
-        $result['message'] = notify_booking_sent_message;
-        $statusCode = 200;
-    } else {
-        $result['messageCode'] = notify_booking_fail_code;
-        $result['message'] = notify_booking_fail_message;
-        $statusCode = 501;
-    }
-
-    array_push($notifyBooking['SendMail_NotifyBooking'], $result);
-
-    return responseBuilder($statusCode, $response, $notifyBooking);
-});
+//$app->post('/notifybooking/send', function ($request, $response) {
+//
+//    $db = new DbOperation();
+//
+//    $notifyBooking['SendMail_NotifyBooking'] = array();
+//
+//    if (empty($request->getParam('appointmentId'))) {
+//        $result['message'] = appointment_id_empty_message;
+//        array_push($notifyBooking['SendMail_NotifyBooking'], $result);
+//
+//        return responseBuilder(501, $response, $notifyBooking);
+//    }
+//
+//    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
+//
+//    if ($emailSentSuccess) {
+//        $result['messageCode'] = notify_booking_sent_code;
+//        $result['message'] = notify_booking_sent_message;
+//        $statusCode = 200;
+//    } else {
+//        $result['messageCode'] = notify_booking_fail_code;
+//        $result['message'] = notify_booking_fail_message;
+//        $statusCode = 501;
+//    }
+//
+//    array_push($notifyBooking['SendMail_NotifyBooking'], $result);
+//
+//    return responseBuilder($statusCode, $response, $notifyBooking);
+//});
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm

@@ -5,7 +5,6 @@
 .idea/modules.xml
 .idea/dictionaries/DoNguyen.xml
 .idea/inspectionProfiles/Project_Default.xml
-SendMail_NotifyBooking.php
 SendMail_ResetPassword.php
 SendMail_VerifyAcc.php
 redirect.php
