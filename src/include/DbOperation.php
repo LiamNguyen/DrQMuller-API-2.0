@@ -744,18 +744,18 @@ class DbOperation
         $sql = query_Select_AppointmentScheduleForEmail;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $appointmentId);
-        $result = $stmt->execute();
+        $stmt->execute();
         $resultArray = $stmt->get_result();
         $stmt->close();
         $array = array();
 
-        if ($result == 1) {
+        if (!empty($resultArray)) {
             while($row = $resultArray->fetch_object()) {
                 array_push($array, $row);
             }
             return $array;
         } else {
-            return '';
+            return array();
         }
     }
 
