@@ -33,7 +33,7 @@ class ValidationRules {
 * Responsibility: Check session token along with customer ID for valid customer
 * */
 
-    function isValidCustomer($request, $requestName) {
+    function isValidCustomer($request, $requestName, $customerId = '') {
         $token = $request->getHeaderLine('Authorization');
         $validationResponse[$requestName] = array();
         $result = array();
@@ -45,6 +45,8 @@ class ValidationRules {
             $isValidTokenResult = $db->isValidTokenAndCustomerId($token, $data->userId);
         } else if (!empty($data->username)) {
             $isValidTokenResult = $db->isValidTokenAndUsername($token, $data->username);
+        } else if (!empty($customerId)) {
+            $isValidTokenResult = $db->isValidTokenAndCustomerId($token, $customerId);
         } else {
             $isValidTokenResult = $db->isValidToken($token);
         }

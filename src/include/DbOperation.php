@@ -495,12 +495,33 @@ class DbOperation
         $resultArray = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
-        if (empty($resultArray['APPOINTMENT_ID'])) {
-            return array();
-        } else {
+        if (!empty($resultArray)) {
             return $resultArray;
+        } else {
+            return array();
         }
 
+    }
+
+    //Method to get customer's active appointments
+    public function getCustomerActiveAppointment($customerId) {
+        $sql = query_Select_CustomerActiveAppointment;
+        $stmt = $this->con->prepare($sql);
+        $stmt->bind_param('s', $customerId);
+        $stmt->execute();
+        $resultArray = $stmt->get_result();
+        $stmt->store_result();
+        $stmt->close();
+        $array = array();
+
+        if (!empty($resultArray)) {
+            while($row = $resultArray->fetch_object()) {
+                array_push($array, $row);
+            }
+            return $array;
+        } else {
+            return array();
+        }
     }
 
     //Method to book time
@@ -719,12 +740,13 @@ class DbOperation
     }
 
     //Method to get appointment schedule for email template, ex: dayId, timeId, machineId
-    private function getAppointmentSchedule($appointmentId) {
+    public function getAppointmentSchedule($appointmentId) {
         $sql = query_Select_AppointmentScheduleForEmail;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $appointmentId);
         $result = $stmt->execute();
         $resultArray = $stmt->get_result();
+        $stmt->close();
         $array = array();
 
         if ($result == 1) {

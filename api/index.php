@@ -869,7 +869,7 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
 
         return responseBuilder(404, $response, $getAppointment);
     } else {
-        $result = parseAppointmentInformationToResponse($result, $appointmentInformation);
+        $result = parseAppointmentInformationToResponse($result, (object) $appointmentInformation);
 
         array_push($getAppointment['Select_Appointment'], $result);
 
@@ -877,35 +877,73 @@ $app->get('/appointment/{appointmentId}', function($request, $response, $args) {
     }
 });
 
-//$app->post('/notifybooking/send', function ($request, $response) {
-//
-//    $db = new DbOperation();
-//
-//    $notifyBooking['SendMail_NotifyBooking'] = array();
-//
-//    if (empty($request->getParam('appointmentId'))) {
-//        $result['message'] = appointment_id_empty_message;
-//        array_push($notifyBooking['SendMail_NotifyBooking'], $result);
-//
-//        return responseBuilder(501, $response, $notifyBooking);
-//    }
-//
-//    $emailSentSuccess= $db->notifyBooking($request->getParam('appointmentId'));
-//
-//    if ($emailSentSuccess) {
-//        $result['messageCode'] = notify_booking_sent_code;
-//        $result['message'] = notify_booking_sent_message;
-//        $statusCode = 200;
-//    } else {
-//        $result['messageCode'] = notify_booking_fail_code;
-//        $result['message'] = notify_booking_fail_message;
-//        $statusCode = 501;
-//    }
-//
-//    array_push($notifyBooking['SendMail_NotifyBooking'], $result);
-//
-//    return responseBuilder($statusCode, $response, $notifyBooking);
-//});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/active/:customerId
+ * Parameters: customerId
+ * Authorization: Session Token to be matched with userId
+ * Method: GET
+ * */
+
+$app->get('/appointment/active/{customerId}', function($request, $response, $args) {
+    $validate = new ValidationRules();
+    $validityResult = $validate->isValidCustomer($request, 'Select_CustomerActiveAppointment', $args['customerId']);
+    if (!$validityResult['valid']) {
+        return responseBuilder(401, $response, $validityResult['response']);
+    }
+
+    $db = new DbOperation();
+    $getCustomerActiveAppointment['Select_CustomerActiveAppointment'] = array();
+    $result = array();
+
+    $listOfActiveAppointments = $db->getCustomerActiveAppointment($args['customerId']);
+    if (empty($listOfActiveAppointments)) {
+        $result['error'] = no_active_appointment_message;
+        $result['errorCode'] = no_active_appointment_code;
+
+        array_push($getCustomerActiveAppointment['Select_CustomerActiveAppointment'], $result);
+
+        return responseBuilder(404, $response, $getCustomerActiveAppointment);
+    } else {
+        foreach ($listOfActiveAppointments as $appointment) {
+            $appointment = (object) $appointment;
+            $result = parseAppointmentInformationToResponse($result, $appointment);
+            array_push($getCustomerActiveAppointment['Select_CustomerActiveAppointment'], $result);
+        }
+
+        return responseBuilder(200, $response, $getCustomerActiveAppointment);
+    }
+});
+
+/* *
+ * URL: http://210.211.109.180/drmuller/api/appointment/schedule/:appointmentId
+ * Parameters: appointmentId
+ * Authorization: none
+ * Method: GET
+ * */
+
+$app->get('/appointment/schedule/{appointmentId}', function($request, $response, $args) {
+    $db = new DbOperation();
+    $getAppointmentSchedule['Select_AppointmentSchedule'] = array();
+    $result = array();
+
+    $schedule = $db->getAppointmentSchedule($args['appointmentId']);
+    if (empty($schedule)) {
+        $result['error'] = wrong_appointment_id_message;
+        $result['errorCode'] = wrong_appointment_id_code;
+
+        array_push($getAppointmentSchedule['Select_AppointmentSchedule'], $result);
+
+        return responseBuilder(404, $response, $getAppointmentSchedule);
+    } else {
+        foreach ($schedule as $time) {
+            $time = (object) $time;
+            array_push($getAppointmentSchedule['Select_AppointmentSchedule'], $time);
+        }
+
+        return responseBuilder(200, $response, $getAppointmentSchedule);
+    }
+});
 
 /* *
  * URL: http://210.211.109.180/drmuller/api/appointment/confirm
@@ -1317,17 +1355,17 @@ function parseCustomerInformationToResponse($resultResponse, $customerInformatio
 * */
 
 function parseAppointmentInformationToResponse($resultResponse, $appointmentInformation) {
-    $resultResponse['appointmentId'] = $appointmentInformation['APPOINTMENT_ID'];
-    $resultResponse['displayId'] = $appointmentInformation['DISPLAY_ID'];
-    $resultResponse['voucher'] = $appointmentInformation['VOUCHER'];
-    $resultResponse['startDate'] = $appointmentInformation['START_DATE'];
-    $resultResponse['expiredDate'] = $appointmentInformation['EXPIRED_DATE'];
-    $resultResponse['type'] = $appointmentInformation['TYPE'];
-    $resultResponse['location'] = $appointmentInformation['LOCATION_NAME'];
-    $resultResponse['customerName'] = $appointmentInformation['CUSTOMER_NAME'];
-    $resultResponse['createdAt'] = $appointmentInformation['CREATEDAT'];
-    $resultResponse['isConfirmed'] = $appointmentInformation['ISCONFIRMED'];
-    $resultResponse['active'] = $appointmentInformation['ACTIVE'];
+    $resultResponse['appointmentId'] = $appointmentInformation->APPOINTMENT_ID;
+    $resultResponse['displayId'] = $appointmentInformation->DISPLAY_ID;
+    $resultResponse['voucher'] = $appointmentInformation->VOUCHER;
+//    $resultResponse['startDate'] = $appointmentInformation->START_DATE;
+    $resultResponse['expiredDate'] = $appointmentInformation->EXPIRED_DATE;
+    $resultResponse['type'] = $appointmentInformation->TYPE;
+    $resultResponse['location'] = $appointmentInformation->LOCATION_NAME;
+    $resultResponse['customerName'] = $appointmentInformation->CUSTOMER_NAME;
+    $resultResponse['createdAt'] = $appointmentInformation->CREATEDAT;
+    $resultResponse['isConfirmed'] = $appointmentInformation->ISCONFIRMED;
+    $resultResponse['active'] = $appointmentInformation->ACTIVE;
 
     return $resultResponse;
 }

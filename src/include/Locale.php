@@ -117,6 +117,26 @@
     );
 
     define(
+        'no_active_appointment_message',
+        'Customer does not have active appointment'
+    );
+
+    define(
+        'no_active_appointment_code',
+        'no-active-apointment'
+    );
+
+    define(
+        'wrong_appointment_id_message',
+        'Wrong appointment ID'
+    );
+
+    define(
+        'wrong_appointment_id_code',
+        'wrong-appointment-id'
+    );
+
+    define(
         'customer_confirm_success_message',
         'Customer confirmed successfully'
     );
