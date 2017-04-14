@@ -184,8 +184,7 @@
         'SELECT ap.CUSTOMER_ID 
         FROM ' . DB_NAME . '.tbl_appointments ap
         WHERE ap.CUSTOMER_ID = ?
-        AND ap.APPOINTMENT_ID = ?
-        AND ap.ACTIVE = 1'
+        AND ap.APPOINTMENT_ID = ?'
     );
 
     define(
