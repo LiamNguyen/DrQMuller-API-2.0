@@ -249,14 +249,14 @@
     define(
         'query_Select_LatestBuildNumber',
         'SELECT v.BUILD 
-        FROM uat_icaredb.tbl_versions as v
+        FROM ' . DB_NAME . '.tbl_versions as v
         Where RELEASEDATE = 
         (  
             SELECT MAX(RELEASEDATE)     
             FROM 
             (
                 SELECT RELEASEDATE 
-                FROM uat_icaredb.tbl_versions as vn
+                FROM ' . DB_NAME . '.tbl_versions as vn
                 WHERE vn.OS = ?
             ) as vsn
         ) AND v.OS = ?'
@@ -275,7 +275,7 @@
                 , ap.CREATEDAT
                 , ap.ISCONFIRMED
                 , ap.ACTIVE
-            FROM uat_icaredb.tbl_appointments ap 
+            FROM ' . DB_NAME . '.tbl_appointments ap 
             INNER JOIN ' . DB_NAME . '.tbl_vouchers vc ON ap.VOUCHER_ID = vc.VOUCHER_ID
             INNER JOIN ' . DB_NAME . '.tbl_types ty ON ap.TYPE_ID = ty.TYPE_ID
             INNER JOIN ' . DB_NAME . '.tbl_locations lo ON ap.LOCATION_ID = lo.LOCATION_ID
