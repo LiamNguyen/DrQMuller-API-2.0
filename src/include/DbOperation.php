@@ -150,11 +150,6 @@ class DbOperation
 
     //Method to get customer by Id
     public function getCustomerByCustomerId($customerId) {
-        $token = $this->getGUID();
-        if (!$this->updateSessionToken($customerId, $token)) {
-            return array();
-        }
-
         $sql = query_Select_CustomerInfoByCustomerId;
         $stmt = $this->con->prepare($sql);
         $stmt->bind_param('s', $customerId);
@@ -170,7 +165,6 @@ class DbOperation
 
             return $resultArray;
         }
-
     }
 
     //Method to get customer by username
@@ -451,28 +445,6 @@ class DbOperation
 
     //Method to validate appointments
     public function validateAppointments() {
-//        $array = $this->getAppointmentSchedule('455B5066-B054-05A1-0517-5AF7CA894998');
-//        $time = '';
-//
-//        echo '\n' . $array;
-//
-//        foreach ($array as $item) {
-//            $timeObj = (object) $item;
-//            $time .= '
-//                <div class="row">
-//                    <span class="subject">
-//                '
-//                .
-//                $timeObj->DAY . ' - ' . $timeObj->TIME . ' ' . $timeObj->MACHINE_NAME
-//                .
-//                '
-//                    </span>
-//                </div>
-//            ';
-//        }
-//
-//        echo '\n' . $time;
-
         $sql = query_Update_ValidateAppointments;
         $stmt = $this->con->prepare($sql);
         $result = $stmt->execute();
