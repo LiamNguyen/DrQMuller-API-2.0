@@ -98,8 +98,8 @@
 
     define(
         'query_Select_CustomerInfoByCustomerId',
-        'SELECT cu.CUSTOMER_ID, CUSTOMER_NAME, DOB, GENDER, 
-        PHONE, ADDRESS, EMAIL, UISAVEDSTEP, ACTIVE, ut.SESSIONTOKEN 
+        'SELECT cu.CUSTOMER_ID as customerId, customer_Name as customerName, dob, gender, 
+        phone, address, email, uiSavedStep, active, ut.SESSIONTOKEN as authorizationToken
         FROM ' . DB_NAME . '.tbl_customers cu
         INNER JOIN ' . DB_NAME . '.tbl_usertoken ut
         ON cu.CUSTOMER_ID = ut.CUSTOMER_ID

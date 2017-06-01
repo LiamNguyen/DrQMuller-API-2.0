@@ -157,11 +157,11 @@ class DbOperation
         $resultArray = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
-        if (empty($resultArray['CUSTOMER_ID'])) {
+        if (empty($resultArray)) {
             return array();
         } else {
-            $jwt = $this->createJwt($resultArray);
-            $resultArray['JWT'] = $jwt;
+            // $jwt = $this->createJwt($resultArray);
+            // $resultArray['JWT'] = $jwt;
 
             return $resultArray;
         }

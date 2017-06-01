@@ -281,13 +281,7 @@ $app->get('/datasource/vouchers', function ($request, $response) {
 $app->post('/user/login', function ($request, $response) {
 
     $data = (object) $request->getParsedBody();
-
-    $validate = new ValidationRules();
-    $requiredFieldsValidityResult = $validate->verifyRequiredFieldsWithUsernameAndPassword($data, 'Select_ToAuthenticate');
-    if ($requiredFieldsValidityResult['error']) {
-        return responseBuilder(400, $response, $requiredFieldsValidityResult['response']);
-    }
-
+    
     $username = $data->username;
     $password = $data->password;
 
@@ -299,7 +293,7 @@ $app->post('/user/login', function ($request, $response) {
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
         $customerInformation = $db->getCustomerByCustomerId($customerId);
-        $result = parseCustomerInformationToResponse($result, $customerInformation);
+        $result = $customerInformation;
         $statusCode = 200;
 
     } else {
@@ -309,9 +303,9 @@ $app->post('/user/login', function ($request, $response) {
 
     }
 
-    array_push($customerLogin['Select_ToAuthenticate'], $result);
+    // array_push($customerLogin['Select_ToAuthenticate'], $result);
 
-    return responseBuilder($statusCode, $response, $customerLogin);
+    return responseBuilder($statusCode, $response, $customerInformation);
 });
 
 /* *
@@ -1343,7 +1337,7 @@ function parseCustomerInformationToResponse($resultResponse, $customerInformatio
     $resultResponse['phone'] = $customerInformation['PHONE'];
     $resultResponse['address'] = $customerInformation['ADDRESS'];
     $resultResponse['email'] = $customerInformation['EMAIL'];
-    $resultResponse['sessionToken'] = $customerInformation['SESSIONTOKEN'];
+    $resultResponse['authorizationToken'] = $customerInformation['SESSIONTOKEN'];
     $resultResponse['jwt'] = $customerInformation['JWT'];
 
     return $resultResponse;
