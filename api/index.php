@@ -327,21 +327,17 @@ $app->post('/user/register', function ($request, $response) {
     $password = $data->password;
 
     $db = new DbOperation();
-
-    $customerRegister['Insert_NewCustomer'] = array();
     $result = array();
 
-    $registerResult = $db->customerRegister($username, $password);
+    $customerId = $db->customerRegister($username, $password);
 
     if ($registerResult == 2) {
         $result['error'] = customer_existed_error_message;
         $result['errorCode'] = customer_existed_error_code;
         $statusCode = 409;
 
-    } else if (!empty($registerResult)) {
-        $customerInformation = $db->getCustomerByCustomerId($registerResult);
-        $result = parseCustomerInformationToResponse($result, $customerInformation);
-        $result['message'] = register_success_message;
+    } else if (!empty($customerId)) {
+        $result = $db->getCustomerByCustomerId($customerId);
         $statusCode = 201;
 
     } else {
@@ -350,10 +346,7 @@ $app->post('/user/register', function ($request, $response) {
         $statusCode = 501;
 
     }
-
-    array_push($customerRegister['Insert_NewCustomer'], $result);
-
-    return responseBuilder($statusCode, $response, $customerRegister);
+    return responseBuilder($statusCode, $response, $result);
 });
 
 /* *
