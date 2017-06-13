@@ -286,14 +286,11 @@ $app->post('/user/login', function ($request, $response) {
     $password = $data->password;
 
     $db = new DbOperation();
-
-    $customerLogin['Select_ToAuthenticate'] = array();
     $result = array();
 
     $customerId = $db->customerLogin($username, $password);
     if (!empty($customerId)) {
-        $customerInformation = $db->getCustomerByCustomerId($customerId);
-        $result = $customerInformation;
+        $result = $db->getCustomerByCustomerId($customerId);
         $statusCode = 200;
 
     } else {
@@ -302,10 +299,7 @@ $app->post('/user/login', function ($request, $response) {
         $statusCode = 401;
 
     }
-
-    // array_push($customerLogin['Select_ToAuthenticate'], $result);
-
-    return responseBuilder($statusCode, $response, $customerInformation);
+    return responseBuilder($statusCode, $response, $result);
 });
 
 /* *
