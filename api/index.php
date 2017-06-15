@@ -331,7 +331,7 @@ $app->post('/user/register', function ($request, $response) {
 
     $customerId = $db->customerRegister($username, $password);
 
-    if ($registerResult == 2) {
+    if ($customerId == 2) {
         $result['error'] = customer_existed_error_message;
         $result['errorCode'] = customer_existed_error_code;
         $statusCode = 409;

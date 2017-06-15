@@ -157,13 +157,18 @@ class DbOperation
         $resultArray = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
+        $transformedArray = array();
+        foreach ($resultArray as $key => $value) {
+            $transformedArray[$key] = is_null($value) ? "" : $value;
+        }
+
         if (empty($resultArray)) {
             return array();
         } else {
             // $jwt = $this->createJwt($resultArray);
             // $resultArray['JWT'] = $jwt;
 
-            return $resultArray;
+            return $transformedArray;
         }
     }
 
