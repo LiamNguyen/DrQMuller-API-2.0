@@ -1,13 +1,5 @@
 /vendor/
 /logs/*
 !/logs/README.md
-.idea/beta_drmuller.iml
-.idea/modules.xml
-.idea/dictionaries/DoNguyen.xml
-.idea/inspectionProfiles/Project_Default.xml
-SendMail_ResetPassword.php
-SendMail_VerifyAcc.php
-redirect.php
-redirect_reset.php
-redirect_verify.php
-src/include/Constants.php
+/.idea
+
